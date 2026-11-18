@@ -1,0 +1,16 @@
+# Dependencies and local tooling
+node_modules/
+.vercel/
+
+# Local secrets — NEVER commit these.
+# Put GITHUB_TOKEN etc. only in Vercel Environment Variables.
+.env
+.env.*
+!.env.example
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+
+# NOTE: data.json is intentionally NOT ignored.
+# It is the shared habit data file that the backend reads/writes on GitHub.

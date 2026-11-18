@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Habit Tracker — Day 1 from 19 Nov 2026</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#0f172a;color:#f1f5f9}
+  .wrap{max-width:860px;margin:0 auto;padding:20px 16px 48px}
+  header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+  h1{margin:0;font-size:28px;letter-spacing:.2px}
+  .sub{color:#94a3b8;margin:6px 0 0;font-size:14px;line-height:1.5}
+  .pill{background:#1e293b;border:1px solid #334155;border-radius:999px;padding:8px 14px;font-weight:700;font-size:14px;white-space:nowrap}
+  .status{margin:14px 0 0;background:#111827;border:1px solid #334155;border-radius:10px;padding:10px 12px;font-size:13px;color:#e2e8f0}
+  .status b{color:#4ade80}
+  .status.browser b{color:#facc15}
+  .hero{margin-top:16px;background:linear-gradient(135deg,#14532d,#0e7490);border-radius:18px;padding:20px;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+  .ring{position:relative;width:124px;height:124px;flex:0 0 auto}
+  .ring svg{transform:rotate(-90deg)}
+  .ring .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .ring .pct{font-size:26px;font-weight:800}
+  .ring .lbl{font-size:12px;color:#d1fae5}
+  .hero h2{margin:0 0 6px;font-size:22px}
+  .hero p{margin:0;color:#d1fae5;line-height:1.5;font-size:14px}
+  .badge{display:inline-block;margin-top:10px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:6px 10px;font-size:12px;font-weight:700}
+  .weekbar{margin-top:16px;background:#1e293b;border:1px solid #334155;border-radius:14px;padding:14px}
+  .weekbar .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .weekbar h3{margin:0;font-size:16px}
+  button{cursor:pointer;border:0;border-radius:10px;padding:10px 14px;font-weight:700;font-size:14px}
+  .btn{background:#334155;color:#fff}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn-green{background:#22c55e;color:#052e16}
+  .btn-dark{background:#020617;color:#fff;border:1px solid #475569}
+  .btn-ghost{background:transparent;color:#e2e8f0;border:1px solid #475569}
+  .weekstrip{display:flex;gap:8px;margin-top:12px}
+  .day{flex:1;text-align:center;background:#0f172a;border:1px solid #334155;border-radius:10px;padding:10px 4px;min-width:0}
+  .day.today{border-color:#22c55e;box-shadow:0 0 0 1px #22c55e}
+  .day .dow{font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px}
+  .day .num{font-size:18px;font-weight:800;margin-top:2px}
+  .day .dn{font-size:11px;color:#94a3b8}
+  .day.future{opacity:.55}
+  .section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:22px 0 12px;flex-wrap:wrap}
+  .section-head h2{margin:0;font-size:20px}
+  .habit{background:#1e293b;border:1px solid #334155;border-radius:16px;padding:16px;margin-bottom:12px}
+  .habit-top{display:flex;gap:12px;align-items:flex-start}
+  .dot{width:12px;height:12px;border-radius:50%;margin-top:6px;flex:0 0 auto}
+  .habit h3{margin:0;font-size:18px}
+  .habit .desc{color:#94a3b8;font-size:13px;margin:4px 0 0;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .habit .meta{margin-top:8px;font-size:13px;color:#e2e8f0}
+  .streak{color:#fbbf24;font-weight:700}
+  .actions{margin-left:auto;display:flex;gap:8px;flex:0 0 auto;flex-wrap:wrap;justify-content:flex-end}
+  .small{padding:8px 10px;font-size:13px}
+  .dots{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+  .wdot{width:44px;height:44px;border-radius:50%;background:#0f172a;color:#e2e8f0;border:2px solid #475569;font-weight:800;padding:0}
+  .wdot.done{background:#22c55e;color:#052e16;border-color:#22c55e}
+  .wdot.today{border-color:#fff}
+  .markrow{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+  .addbar{width:100%;margin-top:4px;padding:16px;font-size:16px;background:#22c55e;color:#052e16;border-radius:14px}
+  .form{background:#1e293b;border:1px solid #22c55e;border-radius:16px;padding:16px;margin-top:14px}
+  .form h3{margin:0 0 12px}
+  .form label{display:block;font-size:13px;color:#94a3b8;margin:10px 0 4px}
+  .form input,.form select{width:100%;padding:11px;border-radius:10px;border:1px solid #475569;background:#0f172a;color:#fff;font-size:15px}
+  .form .row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+  .hidden{display:none !important}
+  .focus{position:fixed;inset:0;background:#020617;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px}
+  .focus-card{width:100%;max-width:560px;text-align:center}
+  .focus-card h2{font-size:30px;margin:8px 0}
+  .focus-card p{color:#94a3b8;line-height:1.5}
+  .timer{font-size:64px;font-weight:800;letter-spacing:1px;margin:16px 0 8px;font-variant-numeric:tabular-nums}
+  .timer-btns,.focus-nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+  .focus-dots{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+  .fdot{width:12px;height:12px;border-radius:50%;background:#334155;border:0;padding:0}
+  .fdot.active{background:#22c55e}
+  .fdot.done{background:#4ade80}
+  footer{margin-top:24px;color:#64748b;font-size:13px;line-height:1.6;text-align:center}
+  @media(max-width:560px){h1{font-size:24px}.habit .desc{white-space:normal}.wdot{width:40px;height:40px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <div>
+      <h1>Habit Tracker</h1>
+      <p class="sub">Java, LeetCode, English, Interview &amp; SAP. Open-ended journey, no fixed end date.</p>
+    </div>
+    <div class="pill" id="datePill">Loading…</div>
+  </header>
+
+  <div class="status" id="storageStatus">Checking where data is saved…</div>
+
+  <section class="hero">
+    <div class="ring" aria-label="Today progress">
+      <svg width="124" height="124" viewBox="0 0 124 124">
+        <circle cx="62" cy="62" r="52" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="11"></circle>
+        <circle id="ringFill" cx="62" cy="62" r="52" fill="none" stroke="#ffffff" stroke-width="11" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"></circle>
+      </svg>
+      <div class="center"><div class="pct" id="ringPct">0%</div><div class="lbl">today done</div></div>
+    </div>
+    <div style="flex:1;min-width:220px">
+      <h2 id="heroTitle">Day 1 begins Thu, 19 Nov</h2>
+      <p id="heroText">No fixed end date: go as deep as you want, the counter just keeps counting.</p>
+      <span class="badge">Open-ended &middot; From 19 Nov 2026 &middot; No end date</span>
+    </div>
+  </section>
+
+  <section class="weekbar">
+    <div class="row">
+      <h3 id="weekTitle">Week 1</h3>
+      <span style="flex:1"></span>
+      <button class="btn" id="prevWeekBtn" type="button">← Prev week</button>
+      <button class="btn" id="currentWeekBtn" type="button">Go to current week</button>
+      <button class="btn" id="nextWeekBtn" type="button">Next week →</button>
+    </div>
+    <div class="weekstrip" id="weekStrip"></div>
+    <p style="color:#94a3b8;font-size:13px;margin:10px 0 0">Tap a day circle under a habit to check off or backfill that day.</p>
+  </section>
+
+  <div class="section-head">
+    <h2>Your habits</h2>
+    <button class="btn-green" id="addTopBtn" type="button">＋ Add Habit</button>
+  </div>
+
+  <div id="habitList"></div>
+  <button class="addbar" id="addBarBtn" type="button">＋ Add a new habit</button>
+
+  <section class="form hidden" id="habitForm">
+    <h3 id="formTitle">Add habit</h3>
+    <label for="fName">Habit name</label>
+    <input id="fName" type="text" placeholder="e.g. Aptitude" maxlength="40">
+    <label for="fDesc">Description / target note</label>
+    <input id="fDesc" type="text" placeholder="e.g. Reasoning + puzzles" maxlength="80">
+    <label for="fTarget">Daily target</label>
+    <input id="fTarget" type="text" placeholder="e.g. 30 min" maxlength="30">
+    <label for="fColor">Colour</label>
+    <select id="fColor">
+      <option value="#22c55e">Green</option>
+      <option value="#f97316">Orange</option>
+      <option value="#eab308">Yellow</option>
+      <option value="#3b82f6">Blue</option>
+      <option value="#a855f7">Purple</option>
+      <option value="#ec4899">Pink</option>
+    </select>
+    <p style="color:#94a3b8;font-size:13px">It joins your list straight away — in the week view and in Focus Mode too. It will show every day from now on, in all future weeks.</p>
+    <div class="row">
+      <button class="btn-green" id="saveHabitBtn" type="button">Save habit</button>
+      <button class="btn-ghost" id="cancelHabitBtn" type="button">Cancel</button>
+    </div>
+  </section>
+
+  <footer>
+    Start: 19 Nov 2026 = Day 1. Habits repeat every day. New habits appear on all future days and weeks.<br>
+    If the backend is not configured, this page saves in your browser only.
+  </footer>
+</main>
+
+<div class="focus hidden" id="focusOverlay" role="dialog" aria-label="Focus Mode">
+  <div class="focus-card">
+    <button class="btn-ghost small" id="exitFocusBtn" type="button" style="float:right">✕ Exit</button>
+    <div style="clear:both"></div>
+    <div style="color:#4ade80;font-weight:800;letter-spacing:1px">FOCUS MODE</div>
+    <h2 id="focusName">—</h2>
+    <p id="focusDesc">—</p>
+    <div class="timer" id="timerText">25:00</div>
+    <div>
+      <button class="btn small" data-mins="25" type="button">25 min</button>
+      <button class="btn small" data-mins="15" type="button">15 min</button>
+      <button class="btn small" data-mins="5" type="button">5 min</button>
+    </div>
+    <div class="timer-btns">
+      <button class="btn-green" id="timerStartBtn" type="button">Start</button>
+      <button class="btn" id="timerResetBtn" type="button">Reset</button>
+    </div>
+    <div class="focus-nav">
+      <button class="btn" id="focusPrevBtn" type="button">← Prev</button>
+      <button class="btn-green" id="focusDoneBtn" type="button">Mark done &amp; continue →</button>
+      <button class="btn" id="focusNextBtn" type="button">Next →</button>
+    </div>
+    <div class="focus-dots" id="focusDots"></div>
+    <p id="focusDoneMsg" style="color:#4ade80;font-weight:700"></p>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var START = new Date(2026, 10, 19);
+  START.setHours(0,0,0,0);
+  var API_URL = "/api/data";
+  var LOCAL_KEY = "habitTrackerDataV1";
+
+  var DEFAULT_HABITS = [
+    {id:"java", name:"Java", desc:"Java core concepts, OOP, collections", target:"60 min", color:"#f97316", checks:{}},
+    {id:"leetcode", name:"LeetCode", desc:"Topic-matched problems from today's Java topic", target:"3 problems", color:"#eab308", checks:{}},
+    {id:"english", name:"English", desc:"American English speaking drill", target:"25 min", color:"#22c55e", checks:{}},
+    {id:"interview", name:"Interview", desc:"Daily HR + technical interview practice", target:"25 min", color:"#3b82f6", checks:{}},
+    {id:"sap", name:"SAP", desc:"SAP S/4HANA Finance & FICO concepts + hands-on", target:"45 min", color:"#a855f7", checks:{}}
+  ];
+
+  function cloneDefaults(){
+    return JSON.parse(JSON.stringify(DEFAULT_HABITS));
+  }
+
+  var state = { version:1, startDate:"2026-11-19", habits: cloneDefaults(), updatedAt: null };
+  var storageMode = "browser";
+  var backendAvailable = false;
+  var viewWeek = 1;
+  var editingId = null;
+  var pendingDeleteId = null;
+  var focusIndex = 0;
+  var timerSeconds = 25*60, timerLeft = 25*60, timerRunning = false, timerId = null;
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+  function midnight(d){ var x=new Date(d); x.setHours(0,0,0,0); return x; }
+  function dayNumberForDate(d){
+    return Math.floor((midnight(d).getTime() - START.getTime())/86400000) + 1;
+  }
+  function dateForDay(n){
+    var d = new Date(START); d.setDate(d.getDate() + (n-1)); return d;
+  }
+  function todayDay(){ return dayNumberForDate(new Date()); }
+  function currentWeek(){ var t = todayDay(); return t < 1 ? 1 : Math.ceil(t/7); }
+  function isDone(h, day){ return !!(h.checks && h.checks[String(day)]); }
+  function streakOf(h){
+    var t = todayDay();
+    if (t < 1) return 0;
+    var day = t, count = 0;
+    if (!isDone(h, day)) day = t - 1;
+    while (day >= 1 && isDone(h, day)) { count++; day--; }
+    return count;
+  }
+  function fmtDate(d){
+    return d.toLocaleDateString("en-GB", {weekday:"short", day:"numeric", month:"short"});
+  }
+  function fmtLong(d){
+    return d.toLocaleDateString("en-GB", {weekday:"long", day:"numeric", month:"long", year:"numeric"});
+  }
+
+  function setStatus(){
+    var el = document.getElementById("storageStatus");
+    if (storageMode === "github") {
+      el.className = "status";
+      el.innerHTML = "<b>Saved to GitHub via backend.</b> Check-offs are stored in data.json in your repo.";
+    } else {
+      el.className = "status browser";
+      el.innerHTML = "<b>Saved in this browser only.</b> Backend not configured or unavailable — data will not sync to GitHub. See README to connect the backend.";
+    }
+  }
+
+  function saveLocal(){
+    try { localStorage.setItem(LOCAL_KEY, JSON.stringify(state)); } catch(e){}
+  }
+  function loadLocal(){
+    try {
+      var raw = localStorage.getItem(LOCAL_KEY);
+      if (!raw) return null;
+      var parsed = JSON.parse(raw);
+      if (parsed && Array.isArray(parsed.habits)) return parsed;
+    } catch(e){}
+    return null;
+  }
+
+  async function save(){
+    state.updatedAt = new Date().toISOString();
+    saveLocal();
+    if (backendAvailable) {
+      try {
+        var r = await fetch(API_URL, {
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body: JSON.stringify(state)
+        });
+        if (r.ok) {
+          storageMode = "github";
+          setStatus();
+          return;
+        }
+      } catch(e){}
+      storageMode = "browser";
+      setStatus();
+    } else {
+      storageMode = "browser";
+      setStatus();
+    }
+  }
+
+  async function load(){
+    try {
+      var r = await fetch(API_URL, {method:"GET", headers:{"Accept":"application/json"}});
+      if (r.ok) {
+        var data = await r.json();
+        if (data && Array.isArray(data.habits)) {
+          backendAvailable = true;
+          storageMode = "github";
+          if (data.habits.length > 0) {
+            state = data;
+            state.habits.forEach(function(h){ if(!h.checks) h.checks={}; });
+          } else {
+            state = {version:1, startDate:"2026-11-19", habits: cloneDefaults(), updatedAt:null};
+          }
+          setStatus();
+          return;
+        }
+      }
+    } catch(e){}
+    backendAvailable = false;
+    storageMode = "browser";
+    var local = loadLocal();
+    if (local) {
+      state = local;
+      state.habits.forEach(function(h){ if(!h.checks) h.checks={}; });
+    }
+    setStatus();
+  }
+
+  function render(){
+    var t = todayDay();
+    var now = new Date();
+    var pill = document.getElementById("datePill");
+    var heroTitle = document.getElementById("heroTitle");
+    var heroText = document.getElementById("heroText");
+    if (t < 1) {
+      pill.textContent = fmtDate(now) + " · Day 1 — starts tomorrow";
+      heroTitle.textContent = "Day 1 begins Thu, 19 Nov — tomorrow";
+      heroText.textContent = "No fixed end date: go as deep as you want, the counter just keeps counting.";
+    } else {
+      pill.textContent = fmtDate(now) + " · Day " + t;
+      heroTitle.textContent = "Day " + t + " · no end date";
+      heroText.textContent = "Started " + fmtLong(START) + ". Keep going — Day 91, 120, 200, as far as you need.";
+    }
+    var done = 0;
+    if (t >= 1) {
+      state.habits.forEach(function(h){ if (isDone(h, t)) done++; });
+    }
+    var total = state.habits.length || 1;
+    var pct = Math.round(done/total*100);
+    document.getElementById("ringPct").textContent = pct + "%";
+    document.getElementById("ringFill").style.strokeDashoffset = String(326.7 * (1 - pct/100));
+    renderWeekStrip(t);
+    renderHabits(t);
+    if (!document.getElementById("focusOverlay").classList.contains("hidden")) renderFocus();
+  }
+
+  function renderWeekStrip(t){
+    var startDay = (viewWeek-1)*7 + 1;
+    document.getElementById("weekTitle").textContent =
+      "Week " + viewWeek + " · Days " + startDay + "–" + (startDay+6);
+    document.getElementById("prevWeekBtn").disabled = viewWeek <= 1;
+    var strip = document.getElementById("weekStrip");
+    var html = "";
+    for (var i=0;i<7;i++){
+      var day = startDay + i;
+      var d = dateForDay(day);
+      var cls = "day" + (day===t ? " today" : "") + (day>t ? " future" : "");
+      html += '<div class="'+cls+'"><div class="dow">'+d.toLocaleDateString("en-GB",{weekday:"short"})+'</div>' +
+        '<div class="num">'+d.getDate()+'</div><div class="dn">Day '+day+'</div></div>';
+    }
+    strip.innerHTML = html;
+  }
+
+  function renderHabits(t){
+    var list = document.getElementById("habitList");
+    var startDay = (viewWeek-1)*7 + 1;
+    if (state.habits.length === 0) {
+      list.innerHTML = '<p style="color:#94a3b8">No habits yet. Use Add Habit to create one.</p>';
+      return;
+    }
+    var html = "";
+    state.habits.forEach(function(h, idx){
+      var st = streakOf(h);
+      var todayDone = t >= 1 && isDone(h, t);
+      html += '<article class="habit"><div class="habit-top">' +
+        '<span class="dot" style="background:'+esc(h.color||"#22c55e")+'"></span>' +
+        '<div style="min-width:0;flex:1"><h3>'+esc(h.name)+'</h3>' +
+        '<p class="desc">'+esc(h.desc||"")+'</p>' +
+        '<div class="meta">Target: '+esc(h.target||"—")+' &nbsp;·&nbsp; <span class="streak">🔥 '+st+'</span> day streak</div></div>' +
+        '<div class="actions">' +
+          '<button class="btn small" type="button" data-focus="'+idx+'">Focus</button>' +
+          '<button class="btn small" type="button" data-edit="'+esc(h.id)+'">Edit</button>' +
+          '<button class="btn small" type="button" data-del="'+esc(h.id)+'">'+(pendingDeleteId===h.id ? "Tap again to delete" : "Delete")+'</button>' +
+        '</div></div>';
+      html += '<div class="dots">';
+      for (var i=0;i<7;i++){
+        var day = startDay + i;
+        var d = dateForDay(day);
+        var cls = "wdot" + (isDone(h, day) ? " done" : "") + (day===t ? " today" : "");
+        var label = isDone(h, day) ? "✓" : String(d.getDate());
+        html += '<button class="'+cls+'" type="button" data-toggle="'+esc(h.id)+':'+day+'" aria-label="'+esc(h.name)+' Day '+day+'">'+label+'</button>';
+      }
+      html += '</div>';
+      html += '<div class="markrow"><button class="'+(todayDone ? "btn" : "btn-green")+'" type="button" data-mark="'+esc(h.id)+'">' +
+        (todayDone ? "✓ Done today — tap to undo" : "✓ Mark done for today") + '</button></div>';
+      html += '</article>';
+    });
+    list.innerHTML = html;
+  }
+
+  function openFocus(idx){
+    focusIndex = Math.max(0, Math.min(idx, state.habits.length-1));
+    document.getElementById("focusOverlay").classList.remove("hidden");
+    resetTimer();
+    renderFocus();
+  }
+  function closeFocus(){
+    stopTimer();
+    document.getElementById("focusOverlay").classList.add("hidden");
+  }
+  function renderFocus(){
+    if (state.habits.length === 0) return;
+    var h = state.habits[focusIndex];
+    document.getElementById("focusName").textContent = h.name;
+    document.getElementById("focusDesc").textContent = (h.desc||"") + (h.target ? " · Target: "+h.target : "");
+    var t = todayDay();
+    document.getElementById("focusDoneMsg").textContent =
+      (t>=1 && isDone(h,t)) ? "✓ Done today" : "";
+    var dots = document.getElementById("focusDots");
+    var html = "";
+    state.habits.forEach(function(x, i){
+      var cls = "fdot" + (i===focusIndex ? " active" : "") + ((t>=1 && isDone(x,t)) ? " done" : "");
+      html += '<button class="'+cls+'" type="button" data-fdot="'+i+'" aria-label="Focus '+esc(x.name)+'"></button>';
+    });
+    dots.innerHTML = html;
+    updateTimerText();
+  }
+  function updateTimerText(){
+    var m = Math.floor(timerLeft/60), s = timerLeft%60;
+    document.getElementById("timerText").textContent =
+      (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+  }
+  function stopTimer(){
+    timerRunning = false;
+    if (timerId) clearInterval(timerId);
+    timerId = null;
+    document.getElementById("timerStartBtn").textContent = "Start";
+  }
+  function resetTimer(){
+    stopTimer();
+    timerLeft = timerSeconds;
+    updateTimerText();
+  }
+  function startPauseTimer(){
+    if (timerRunning) { stopTimer(); return; }
+    timerRunning = true;
+    document.getElementById("timerStartBtn").textContent = "Pause";
+    timerId = setInterval(function(){
+      if (timerLeft > 0) { timerLeft--; updateTimerText(); }
+      if (timerLeft <= 0) { stopTimer(); }
+    }, 1000);
+  }
+  function focusDoneAndNext(){
+    var t = todayDay();
+    if (t < 1) return;
+    var h = state.habits[focusIndex];
+    if (!h.checks) h.checks = {};
+    h.checks[String(t)] = true;
+    save();
+    for (var step=1; step<=state.habits.length; step++){
+      var ni = (focusIndex+step) % state.habits.length;
+      if (!isDone(state.habits[ni], t)) { focusIndex = ni; render(); return; }
+    }
+    render();
+  }
+
+  function showForm(editId){
+    editingId = editId || null;
+    pendingDeleteId = null;
+    var form = document.getElementById("habitForm");
+    form.classList.remove("hidden");
+    if (editingId) {
+      var h = state.habits.find(function(x){ return x.id===editingId; });
+      document.getElementById("formTitle").textContent = "Edit habit";
+      document.getElementById("fName").value = h ? h.name : "";
+      document.getElementById("fDesc").value = h ? (h.desc||"") : "";
+      document.getElementById("fTarget").value = h ? (h.target||"") : "";
+      document.getElementById("fColor").value = h ? (h.color||"#22c55e") : "#22c55e";
+    } else {
+      document.getElementById("formTitle").textContent = "Add habit";
+      document.getElementById("fName").value = "";
+      document.getElementById("fDesc").value = "";
+      document.getElementById("fTarget").value = "";
+      document.getElementById("fColor").value = "#22c55e";
+    }
+    form.scrollIntoView({behavior:"smooth", block:"center"});
+    document.getElementById("fName").focus();
+  }
+  function hideForm(){
+    editingId = null;
+    document.getElementById("habitForm").classList.add("hidden");
+  }
+  function saveForm(){
+    var name = document.getElementById("fName").value.trim();
+    if (!name) { alert("Please enter a habit name."); return; }
+    var desc = document.getElementById("fDesc").value.trim();
+    var target = document.getElementById("fTarget").value.trim();
+    var color = document.getElementById("fColor").value;
+    var isEdit = !!editingId;
+    if (editingId) {
+      var h = state.habits.find(function(x){ return x.id===editingId; });
+      if (h) { h.name=name; h.desc=desc; h.target=target; h.color=color; }
+    } else {
+      state.habits.push({id:"h"+Date.now(), name:name, desc:desc, target:target, color:color, checks:{}});
+    }
+    hideForm();
+    save();
+    render();
+    alert((isEdit ? "Saved: " : "Added: ") + name + " — it will show every day from now on, in all future weeks.");
+  }
+
+  document.getElementById("habitList").addEventListener("click", function(e){
+    var btn = e.target.closest("button");
+    if (!btn) return;
+    if (btn.dataset.toggle) {
+      var parts = btn.dataset.toggle.split(":");
+      var h = state.habits.find(function(x){ return x.id===parts[0]; });
+      if (!h) return;
+      if (!h.checks) h.checks={};
+      var key = parts[1];
+      if (h.checks[key]) delete h.checks[key]; else h.checks[key]=true;
+      save(); render(); return;
+    }
+    if (btn.dataset.mark) {
+      var t = todayDay();
+      if (t < 1) { alert("Day 1 starts on Thu, 19 Nov 2026."); return; }
+      var h2 = state.habits.find(function(x){ return x.id===btn.dataset.mark; });
+      if (!h2) return;
+      if (!h2.checks) h2.checks={};
+      var k = String(t);
+      if (h2.checks[k]) delete h2.checks[k]; else h2.checks[k]=true;
+      save(); render(); return;
+    }
+    if (btn.dataset.focus !== undefined && btn.dataset.focus !== "") {
+      openFocus(parseInt(btn.dataset.focus,10)); return;
+    }
+    if (btn.dataset.edit) { showForm(btn.dataset.edit); return; }
+    if (btn.dataset.del) {
+      if (pendingDeleteId !== btn.dataset.del) {
+        pendingDeleteId = btn.dataset.del;
+        render();
+        setTimeout(function(){ pendingDeleteId=null; render(); }, 3000);
+      } else {
+        state.habits = state.habits.filter(function(x){ return x.id!==btn.dataset.del; });
+        pendingDeleteId = null;
+        save(); render();
+      }
+      return;
+    }
+  });
+
+  document.getElementById("prevWeekBtn").addEventListener("click", function(){
+    if (viewWeek > 1) { viewWeek--; render(); }
+  });
+  document.getElementById("nextWeekBtn").addEventListener("click", function(){
+    viewWeek++; render();
+  });
+  document.getElementById("currentWeekBtn").addEventListener("click", function(){
+    viewWeek = currentWeek(); render();
+  });
+  document.getElementById("addTopBtn").addEventListener("click", function(){ showForm(null); });
+  document.getElementById("addBarBtn").addEventListener("click", function(){ showForm(null); });
+  document.getElementById("saveHabitBtn").addEventListener("click", saveForm);
+  document.getElementById("cancelHabitBtn").addEventListener("click", hideForm);
+
+  document.getElementById("exitFocusBtn").addEventListener("click", closeFocus);
+  document.getElementById("focusPrevBtn").addEventListener("click", function(){
+    focusIndex = (focusIndex - 1 + state.habits.length) % state.habits.length;
+    resetTimer(); renderFocus();
+  });
+  document.getElementById("focusNextBtn").addEventListener("click", function(){
+    focusIndex = (focusIndex + 1) % state.habits.length;
+    resetTimer(); renderFocus();
+  });
+  document.getElementById("focusDoneBtn").addEventListener("click", focusDoneAndNext);
+  document.getElementById("timerStartBtn").addEventListener("click", startPauseTimer);
+  document.getElementById("timerResetBtn").addEventListener("click", resetTimer);
+  document.querySelectorAll("[data-mins]").forEach(function(b){
+    b.addEventListener("click", function(){
+      timerSeconds = parseInt(b.dataset.mins,10)*60;
+      resetTimer();
+    });
+  });
+  document.getElementById("focusDots").addEventListener("click", function(e){
+    var btn = e.target.closest("button[data-fdot]");
+    if (!btn) return;
+    focusIndex = parseInt(btn.dataset.fdot,10);
+    resetTimer(); renderFocus();
+  });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape" && !document.getElementById("focusOverlay").classList.contains("hidden")) closeFocus();
+  });
+
+  viewWeek = currentWeek();
+  load().then(function(){ viewWeek = currentWeek(); render(); });
+  render();
+})();
+</script>
+</body>
+</html>

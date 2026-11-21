@@ -1,601 +1,884 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Habit Tracker — Day 1 from 19 Nov 2026</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="dark" />
+<link rel="icon" href="data:," />
+<title>Habit Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
+  :root{
+    color-scheme: dark;
+    --bg:#050505; --bg2:#0A0A0A; --card:#111008; --card2:#1C190E;
+    --ink:#F5EFE0; --muted:#B3A88F; --line:#3D3423;
+    --green:#D4AF37; --green-bg:#1A160B;
+    --gold:#D4AF37; --gold-bright:#F0D67C; --gold-deep:#B8962E; --gold-soft:#221C0E;
+    --shadow:0 16px 40px rgba(0,0,0,.65), 0 0 0 1px rgba(212,175,55,.06);
+    --radius:20px;
+  }
   *{box-sizing:border-box}
-  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#0f172a;color:#f1f5f9}
-  .wrap{max-width:860px;margin:0 auto;padding:20px 16px 48px}
-  header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
-  h1{margin:0;font-size:28px;letter-spacing:.2px}
-  .sub{color:#94a3b8;margin:6px 0 0;font-size:14px;line-height:1.5}
-  .pill{background:#1e293b;border:1px solid #334155;border-radius:999px;padding:8px 14px;font-weight:700;font-size:14px;white-space:nowrap}
-  .status{margin:14px 0 0;background:#111827;border:1px solid #334155;border-radius:10px;padding:10px 12px;font-size:13px;color:#e2e8f0}
-  .status b{color:#4ade80}
-  .status.browser b{color:#facc15}
-  .hero{margin-top:16px;background:linear-gradient(135deg,#14532d,#0e7490);border-radius:18px;padding:20px;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
-  .ring{position:relative;width:124px;height:124px;flex:0 0 auto}
-  .ring svg{transform:rotate(-90deg)}
-  .ring .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-  .ring .pct{font-size:26px;font-weight:800}
-  .ring .lbl{font-size:12px;color:#d1fae5}
-  .hero h2{margin:0 0 6px;font-size:22px}
-  .hero p{margin:0;color:#d1fae5;line-height:1.5;font-size:14px}
-  .badge{display:inline-block;margin-top:10px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:6px 10px;font-size:12px;font-weight:700}
-  .weekbar{margin-top:16px;background:#1e293b;border:1px solid #334155;border-radius:14px;padding:14px}
-  .weekbar .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .weekbar h3{margin:0;font-size:16px}
-  button{cursor:pointer;border:0;border-radius:10px;padding:10px 14px;font-weight:700;font-size:14px}
-  .btn{background:#334155;color:#fff}
-  .btn:disabled{opacity:.45;cursor:not-allowed}
-  .btn-green{background:#22c55e;color:#052e16}
-  .btn-dark{background:#020617;color:#fff;border:1px solid #475569}
-  .btn-ghost{background:transparent;color:#e2e8f0;border:1px solid #475569}
-  .weekstrip{display:flex;gap:8px;margin-top:12px}
-  .day{flex:1;text-align:center;background:#0f172a;border:1px solid #334155;border-radius:10px;padding:10px 4px;min-width:0}
-  .day.today{border-color:#22c55e;box-shadow:0 0 0 1px #22c55e}
-  .day .dow{font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px}
-  .day .num{font-size:18px;font-weight:800;margin-top:2px}
-  .day .dn{font-size:11px;color:#94a3b8}
-  .day.future{opacity:.55}
-  .section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:22px 0 12px;flex-wrap:wrap}
-  .section-head h2{margin:0;font-size:20px}
-  .habit{background:#1e293b;border:1px solid #334155;border-radius:16px;padding:16px;margin-bottom:12px}
-  .habit-top{display:flex;gap:12px;align-items:flex-start}
-  .dot{width:12px;height:12px;border-radius:50%;margin-top:6px;flex:0 0 auto}
-  .habit h3{margin:0;font-size:18px}
-  .habit .desc{color:#94a3b8;font-size:13px;margin:4px 0 0;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .habit .meta{margin-top:8px;font-size:13px;color:#e2e8f0}
-  .streak{color:#fbbf24;font-weight:700}
-  .actions{margin-left:auto;display:flex;gap:8px;flex:0 0 auto;flex-wrap:wrap;justify-content:flex-end}
-  .small{padding:8px 10px;font-size:13px}
-  .dots{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
-  .wdot{width:44px;height:44px;border-radius:50%;background:#0f172a;color:#e2e8f0;border:2px solid #475569;font-weight:800;padding:0}
-  .wdot.done{background:#22c55e;color:#052e16;border-color:#22c55e}
-  .wdot.today{border-color:#fff}
-  .markrow{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
-  .addbar{width:100%;margin-top:4px;padding:16px;font-size:16px;background:#22c55e;color:#052e16;border-radius:14px}
-  .form{background:#1e293b;border:1px solid #22c55e;border-radius:16px;padding:16px;margin-top:14px}
-  .form h3{margin:0 0 12px}
-  .form label{display:block;font-size:13px;color:#94a3b8;margin:10px 0 4px}
-  .form input,.form select{width:100%;padding:11px;border-radius:10px;border:1px solid #475569;background:#0f172a;color:#fff;font-size:15px}
-  .form .row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
-  .hidden{display:none !important}
-  .focus{position:fixed;inset:0;background:#020617;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px}
-  .focus-card{width:100%;max-width:560px;text-align:center}
-  .focus-card h2{font-size:30px;margin:8px 0}
-  .focus-card p{color:#94a3b8;line-height:1.5}
-  .timer{font-size:64px;font-weight:800;letter-spacing:1px;margin:16px 0 8px;font-variant-numeric:tabular-nums}
-  .timer-btns,.focus-nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
-  .focus-dots{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
-  .fdot{width:12px;height:12px;border-radius:50%;background:#334155;border:0;padding:0}
-  .fdot.active{background:#22c55e}
-  .fdot.done{background:#4ade80}
-  footer{margin-top:24px;color:#64748b;font-size:13px;line-height:1.6;text-align:center}
-  @media(max-width:560px){h1{font-size:24px}.habit .desc{white-space:normal}.wdot{width:40px;height:40px}}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:radial-gradient(900px 500px at 50% -10%, rgba(212,175,55,.14), transparent 60%), radial-gradient(700px 400px at 100% 0%, rgba(140,115,45,.35), transparent 55%), linear-gradient(180deg,#050505 0%,#0A0A0A 55%,#050505 100%);background-attachment:fixed;color:var(--ink);font-family:"DM Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  button,[role="button"],select,input{ min-height:44px; font-family:inherit }
+  button{cursor:pointer}
+  a{color:inherit}
+  .wrap{max-width:1020px;margin:0 auto;padding:22px 18px 48px}
+  /* Top bar */
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .date-pill{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:8px 14px;box-shadow:var(--shadow)}
+  .date-pill b{font-size:14px;letter-spacing:.01em}
+  .date-pill span{font-size:13px;color:var(--muted)}
+  .focus-btn{border:1px solid #F0D67C;background:linear-gradient(135deg,#F0D67C,#D4AF37 55%,#D4AF37);color:#050505;padding:0 18px;border-radius:999px;font-weight:800;font-size:14px;display:inline-flex;align-items:center;gap:8px;box-shadow:0 8px 24px rgba(212,175,55,.28)}
+  .focus-btn i{width:8px;height:8px;background:#050505;border-radius:50%;display:inline-block;box-shadow:0 0 0 4px rgba(5,5,5,.18)}
+  .aura-btn{border:1px solid rgba(212,175,55,.45);background:#171408;color:var(--ink);padding:0 18px;border-radius:999px;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:8px;box-shadow:var(--shadow)}
+  .aura-btn i{width:8px;height:8px;border-radius:50%;display:inline-block;background:#F0D67C;box-shadow:0 0 0 4px rgba(240,214,124,.20)}
+  .aura-btn[aria-pressed="true"]{background:linear-gradient(135deg,#2E2512,#221C0E);color:#F0D67C;border-color:#D4AF37;box-shadow:0 0 24px rgba(212,175,55,.35)}
+  .aura-btn[aria-pressed="true"] i{background:#F0D67C;box-shadow:0 0 12px 4px rgba(212,175,55,.75)}
+  .top-actions{display:flex;gap:8px;flex-wrap:wrap}
+  /* ---- Aura Mode: calm premium glow theme (toggle, session only) ---- */
+  body.aura-on{
+    background:
+      radial-gradient(680px 460px at 12% -6%, rgba(212,175,55,.28), transparent 65%),
+      radial-gradient(600px 440px at 88% 4%, rgba(140,115,45,.32), transparent 65%),
+      radial-gradient(760px 560px at 50% 108%, rgba(212,175,55,.18), transparent 65%),
+      linear-gradient(165deg, #050505 0%, #0A0A0A 55%, #050505 100%);
+    background-attachment:fixed;
+  }
+  body.aura-on .hero-card,
+  body.aura-on .ring-card,
+  body.aura-on .todo-card,
+  body.aura-on .start-card,
+  body.aura-on .roadmap{
+    box-shadow:0 18px 44px rgba(0,0,0,.70), 0 0 38px rgba(212,175,55,.22), 0 0 12px rgba(212,175,55,.14);
+    border-color:rgba(212,175,55,.55);
+  }
+  body.aura-on .habit{
+    box-shadow:0 6px 22px rgba(0,0,0,.55), 0 0 22px rgba(212,175,55,.14);
+  }
+  body.aura-on .habit:hover{ box-shadow:0 8px 26px rgba(0,0,0,.60), 0 0 30px rgba(212,175,55,.24); }
+  body.aura-on .date-pill{ box-shadow:0 8px 24px rgba(0,0,0,.55), 0 0 20px rgba(212,175,55,.22); border-color:rgba(212,175,55,.45); }
+  body.aura-on .ring-wrap{ filter:drop-shadow(0 0 16px rgba(212,175,55,.55)) drop-shadow(0 0 34px rgba(212,175,55,.28)); animation:auraPulse 4.5s ease-in-out infinite alternate; }
+  body.aura-on #ringProg{ stroke:url(#auraGrad); }
+  body.aura-on .todo-progress i{ box-shadow:0 0 14px rgba(212,175,55,.70); }
+  body.aura-on .todo-head{ box-shadow:inset 0 0 44px rgba(212,175,55,.18); }
+  @keyframes auraPulse{ from{ filter:drop-shadow(0 0 10px rgba(212,175,55,.40)) drop-shadow(0 0 22px rgba(212,175,55,.20)); } to{ filter:drop-shadow(0 0 22px rgba(212,175,55,.65)) drop-shadow(0 0 44px rgba(212,175,55,.35)); } }
+  @media (prefers-reduced-motion: reduce){ body.aura-on .ring-wrap{ animation:none; } }
+  /* Hero */
+  .hero{display:grid;grid-template-columns:1.35fr .85fr;gap:16px;margin-top:16px}
+  @media(max-width:720px){.hero{grid-template-columns:1fr}}
+  .hero-card{background:linear-gradient(145deg,#050505 0%,#2A2110 55%,#050505 100%);color:#F0D67C;border:1px solid rgba(212,175,55,.38);border-radius:24px;padding:26px 24px 22px;position:relative;overflow:hidden;box-shadow:0 20px 48px rgba(0,0,0,.70), inset 0 1px 0 rgba(240,214,124,.18)}
+  .hero-card:before{content:"";position:absolute;right:-40px;top:-50px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,.38) 0%,rgba(212,175,55,.08) 45%,transparent 68%);opacity:1}
+  .hero-card h1{font-family:"DM Serif Display",serif;font-weight:400;font-size:clamp(32px,5vw,46px);line-height:.98;letter-spacing:-.02em;margin:8px 0 10px;max-width:520px;position:relative}
+  .hero-card h1 em{font-style:italic;color:#F0D67C}
+  .hero-card p{color:#D4AF37;font-size:15px;line-height:1.55;max-width:520px;margin:0;position:relative}
+  .hero-kicker{font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:800;color:#F0D67C;position:relative}
+  .hero-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;position:relative}
+  .chip{background:rgba(212,175,55,.10);border:1px solid rgba(212,175,55,.28);color:#F0D67C;padding:8px 11px;border-radius:999px;font-size:13px;font-weight:600}
+  .chip strong{color:#F0D67C}
+  /* Ring card */
+  .ring-card{background:linear-gradient(160deg,#171408,#0A0A0A);border:1px solid rgba(212,175,55,.32);border-radius:24px;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:var(--shadow)}
+  .ring-wrap{position:relative;width:148px;height:148px}
+  .ring-wrap svg{transform:rotate(-90deg)}
+  .ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .ring-center b{font-size:30px;line-height:1;letter-spacing:-.03em}
+  .ring-center span{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:4px}
+  .ring-card h3{margin:14px 0 4px;font-size:16px}
+  .ring-card p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.5;max-width:260px}
+  /* Week strip + week navigation */
+  .week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:16px}
+  .day{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px 6px;text-align:center}
+  .day small{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:800}
+  .day b{display:block;font-size:16px;margin-top:2px}
+  .day em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);font-weight:700;margin-top:1px}
+  .day .dots{display:flex;justify-content:center;gap:3px;margin-top:7px;flex-wrap:wrap}
+  .day .dots i{width:6px;height:6px;border-radius:50%;background:#4A3F22;display:block}
+  .day .dots i.on{background:var(--green)}
+  .day.today{border-color:#D4AF37;box-shadow:0 0 0 1px rgba(212,175,55,.35), 0 12px 28px rgba(0,0,0,.55)}
+  .day.today small{color:#F0D67C}
+  .day.ahead{opacity:.55}
+  .week-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;flex-wrap:wrap}
+  .week-nav-label{font-size:13.5px;font-weight:800;letter-spacing:.01em}
+  .week-nav-label span{color:var(--muted);font-weight:600}
+  .week-nav-btns{display:flex;gap:8px;flex-wrap:wrap}
+  .wnav{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:0 16px;font-weight:800;font-size:13.5px;color:var(--ink)}
+  .wnav:disabled{opacity:.4;cursor:default}
+  .wnav.current{background:linear-gradient(135deg,#F0D67C,#D4AF37);color:#050505;border-color:#D4AF37}
+  /* Section head */
+  .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:26px 2px 12px;flex-wrap:wrap}
+  .section-head h2{font-family:"DM Serif Display",serif;font-weight:400;font-size:28px;margin:0;letter-spacing:-.02em;color:#F0D67C}
+  .section-head p{margin:2px 0 0;color:var(--muted);font-size:13.5px;max-width:560px;line-height:1.5}
+  .add-btn{background:linear-gradient(135deg,#F0D67C,#D4AF37);color:#050505;border:1px solid #D4AF37;border-radius:999px;padding:0 20px;font-weight:800;font-size:14.5px;box-shadow:0 10px 24px rgba(212,175,55,.25)}
+  /* Add habit — big, unmissable */
+  .add-card{width:100%;margin-top:14px;background:linear-gradient(135deg,#F0D67C,#D4AF37 60%,#D4AF37);border:1px solid #F0D67C;border-radius:var(--radius);padding:20px;font-size:16.5px;font-weight:800;color:#050505;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:var(--shadow);min-height:60px}
+  .add-card .plus{width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.18);display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;flex-shrink:0}
+  .add-card span{color:rgba(5,5,5,.72);font-weight:600;font-size:13.5px}
+  @media(max-width:560px){.add-card{flex-wrap:wrap;text-align:center}}
+  /* Habit cards */
+  .habits{display:flex;flex-direction:column;gap:12px}
+  .habit{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;display:grid;grid-template-columns:52px 1fr auto;gap:14px;align-items:start;box-shadow:0 2px 10px rgba(0,0,0,.03)}
+  @media(max-width:560px){.habit{grid-template-columns:46px 1fr; } .habit-actions{grid-column:1/-1}}
+  .avatar{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;letter-spacing:-.02em;flex-shrink:0}
+  @media(max-width:560px){.avatar{width:46px;height:46px;border-radius:14px;font-size:16px}}
+  .habit-main{min-width:0}
+  .habit-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .habit-top h3{margin:0;font-size:17px;letter-spacing:-.02em}
+  .streak{font-size:12px;font-weight:800;padding:5px 8px;border-radius:999px;background:#221C0E;color:#F0D67C;border:1px solid rgba(212,175,55,.50);white-space:nowrap}
+  .streak.none{background:var(--bg);color:var(--muted);border-color:var(--line)}
+
+  .habit-main p{margin:4px 0 0;color:var(--muted);font-size:13.5px;line-height:1.5}
+  .habit-main .target{margin-top:6px;font-size:12.5px;font-weight:700;color:var(--ink)}
+  .habit-main .target span{color:var(--muted);font-weight:600}
+  .week-dots{display:flex;gap:6px;margin-top:12px;align-items:center;flex-wrap:wrap}
+  .wdot{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--line);background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;font-weight:800;letter-spacing:.04em;color:var(--muted);padding:0;min-height:38px;line-height:1.15}
+  .wdot b{font-size:11px;line-height:1}
+  .wdot.done{background:linear-gradient(135deg,#F0D67C,#D4AF37);border-color:#D4AF37;color:#050505}
+  .wdot.is-today{border-color:#D4AF37;color:#F0D67C}
+  .wdot.done.is-today{color:#050505;border-color:#D4AF37;box-shadow:0 0 0 3px rgba(212,175,55,.22)}
+  .week-label{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-right:2px}
+  .habit-actions{display:flex;flex-direction:column;align-items:stretch;gap:8px;min-width:118px}
+  .check-btn{border:1px solid #D4AF37;border-radius:14px;padding:0 16px;font-weight:800;font-size:14px;background:linear-gradient(135deg,#F0D67C,#D4AF37);color:#050505;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+  .check-btn.done{background:#161207;color:#F0D67C;border:1px solid rgba(212,175,55,.55)}
+  .mini-row{display:flex;gap:6px}
+  .mini-btn{flex:1;background:transparent;border:1px solid var(--line);border-radius:10px;font-size:12.5px;font-weight:700;padding:0 8px;color:var(--muted)}
+  .habit.done-card{border-color:rgba(212,175,55,.60);box-shadow:0 10px 28px rgba(0,0,0,.55), 0 0 18px rgba(212,175,55,.10)}
+  /* Add form */
+  .add-panel{background:var(--card);border:1.5px solid rgba(212,175,55,.65);border-radius:20px;padding:18px;margin-top:12px;display:none;box-shadow:var(--shadow)}
+  .add-panel.open{display:block}
+  .add-panel h3{margin:0 0 4px;font-size:16px}
+  .add-panel .hint{margin:0 0 12px;color:var(--muted);font-size:13px}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:560px){.form-grid{grid-template-columns:1fr}}
+  .form-grid input,.form-grid select{width:100%;border:1px solid var(--line);background:#050505;color:var(--ink);border-radius:12px;padding:0 12px;font-size:14px}
+  .form-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+  .primary-btn{background:linear-gradient(135deg,#F0D67C,#D4AF37);color:#050505;border:1px solid #D4AF37;border-radius:999px;padding:0 18px;font-weight:800;font-size:14px}
+  .ghost-btn{background:transparent;border:1px solid var(--line);border-radius:999px;padding:0 16px;font-weight:700;font-size:14px;color:var(--ink)}
+  /* Bottom note / roadmap */
+  .roadmap{margin-top:22px;background:linear-gradient(145deg,#171408,#0A0A0A);border:1px solid rgba(212,175,55,.28);border-radius:20px;padding:18px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}
+  @media(max-width:640px){.roadmap{grid-template-columns:1fr}}
+  .roadmap h3{margin:0;font-size:16px}
+  .roadmap p{margin:4px 0 0;color:var(--muted);font-size:13.5px;line-height:1.55}
+  .roadmap-badge{text-align:center;background:linear-gradient(145deg,#050505,#1E1E1E);color:#F0D67C;border:1px solid rgba(212,175,55,.45);border-radius:16px;padding:14px 16px;min-width:150px}
+  .roadmap-badge b{display:block;font-size:22px;line-height:1;color:#F0D67C}
+  .roadmap-badge span{font-size:12px;opacity:.75;font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:block;margin-top:4px}
+  footer{margin-top:18px;text-align:center;color:var(--muted);font-size:12.5px;line-height:1.6;padding:0 10px}
+  /* Start-your-journey card — Day 1 is the day YOU choose to start */
+  .start-card{margin-top:16px;background:linear-gradient(145deg,#171408,#0A0A0A);border:1.5px solid rgba(212,175,55,.55);border-radius:24px;padding:20px;box-shadow:var(--shadow)}
+  .start-card h2{font-family:"DM Serif Display",serif;font-weight:400;font-size:26px;margin:0;letter-spacing:-.02em;line-height:1.1}
+  .start-card p{margin:6px 0 0;color:var(--muted);font-size:14px;line-height:1.55;max-width:640px}
+  .start-card p strong{color:var(--ink)}
+  .start-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;align-items:stretch}
+  .start-row input[type="date"]{border:1px solid rgba(212,175,55,.35);background:#050505;color:var(--ink);border-radius:999px;padding:0 16px;font-size:14.5px;font-weight:700;min-height:44px}
+  .start-go{background:linear-gradient(135deg,#F0D67C,#D4AF37);color:#050505;border:1px solid #D4AF37;border-radius:999px;padding:0 22px;font-weight:800;font-size:15px;box-shadow:0 10px 24px rgba(212,175,55,.25)}
+  .start-alt{background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:0 18px;font-weight:700;font-size:14px}
+  .start-status{margin-top:12px;font-size:14px;font-weight:700;color:#F0D67C;min-height:20px}
+  .start-card.started{border-color:var(--line)}
+  .start-card.started .start-picker{display:none}
+  .start-change{margin-top:10px;background:transparent;border:1px solid var(--line);border-radius:999px;padding:0 16px;font-weight:700;font-size:13.5px;color:var(--ink);display:none}
+  .start-card.started .start-change{display:inline-flex;align-items:center}
+  /* Today's To-Do — attractive checklist */
+  .todo-card{margin-top:20px;background:var(--card);border:1px solid var(--line);border-radius:24px;overflow:hidden;box-shadow:var(--shadow)}
+  .todo-card.all-done{border:1.5px solid #D4AF37;box-shadow:0 0 32px rgba(212,175,55,.22), var(--shadow)}
+  .todo-head{background:linear-gradient(120deg,#050505 0%,#1E1E1E 55%,#050505 100%);color:#F0D67C;border-bottom:1px solid rgba(212,175,55,.35);padding:18px 20px;display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}
+  .todo-head-badges{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .todo-xp{background:linear-gradient(135deg,#F0D67C,#D4AF37);color:#050505;border-radius:999px;padding:8px 13px;font-weight:800;font-size:13px;white-space:nowrap}
+  .todo-progress i{background:linear-gradient(90deg,#D4AF37,#D4AF37,#F0D67C);transition:width .45s ease}
+  .todo-xp-chip{display:block;margin-top:3px;font-size:11.5px;font-weight:800;color:#D4AF37;letter-spacing:.02em}
+
+  @media (prefers-reduced-motion: reduce){ .todo-progress i{transition:none} }
+  .todo-head h2{font-family:"DM Serif Display",serif;font-weight:400;font-size:26px;margin:0;letter-spacing:-.02em;line-height:1.05}
+  .todo-head p{margin:5px 0 0;color:rgba(240,214,124,.82);font-size:13.5px;line-height:1.5;max-width:520px}
+  .todo-count{background:#171408;color:#F0D67C;border:1px solid rgba(212,175,55,.50);border-radius:999px;padding:8px 13px;font-weight:800;font-size:13px;white-space:nowrap}
+  .todo-progress{height:10px;background:#4A3F22;border:1px solid rgba(212,175,55,.18);margin:16px 20px 4px;border-radius:999px;overflow:hidden}
+  .todo-progress i{display:block;height:100%;background:var(--green);border-radius:999px;transition:width .45s ease}
+  .todo-progress-label{margin:6px 20px 0;font-size:12.5px;font-weight:700;color:var(--muted)}
+  .todo-progress-label strong{color:#F0D67C}
+  .todo-list{padding:10px 12px 14px;display:flex;flex-direction:column;gap:8px}
+  .todo-item{width:100%;text-align:left;border:1.5px solid var(--line);background:var(--card2);border-radius:16px;padding:12px 14px;display:grid;grid-template-columns:42px 1fr auto;gap:12px;align-items:center;min-height:64px;color:var(--ink)}
+  .todo-item:hover{border-color:rgba(212,175,55,.60)}
+  .todo-check{width:42px;height:42px;border-radius:50%;border:2px solid var(--line);background:var(--card);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:transparent;flex-shrink:0}
+  .todo-item.done{border-color:rgba(212,175,55,.60);background:#161207}
+  .todo-item.done .todo-check{background:linear-gradient(135deg,#F0D67C,#D4AF37);border-color:#D4AF37;color:#050505}
+  .todo-item.done .todo-label{text-decoration:line-through;opacity:.75}
+  .todo-label{font-size:15.5px;font-weight:800;letter-spacing:-.01em;display:block}
+  .todo-detail{font-size:13px;color:var(--muted);line-height:1.45;display:block;margin-top:2px}
+  .todo-time{font-size:12px;font-weight:800;background:var(--bg);border:1px solid var(--line);color:var(--ink);padding:6px 9px;border-radius:999px;white-space:nowrap}
+  .todo-item.done .todo-time{background:#050505;color:#F0D67C;border-color:rgba(212,175,55,.45)}
+  .todo-group{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--muted);padding:8px 8px 0}
+  .todo-foot{margin:0;padding:0 20px 18px;font-size:13.5px;font-weight:700;color:#F0D67C;min-height:20px}
+  @media(max-width:560px){.todo-item{grid-template-columns:42px 1fr}.todo-time{grid-column:2;justify-self:start}}
+  /* Focus overlay */
+  .focus-overlay{position:fixed;inset:0;background:radial-gradient(800px 480px at 50% -10%, rgba(212,175,55,.14), transparent 60%), #050505;color:#F0D67C;z-index:50;display:none;overflow:auto}
+  .focus-overlay.open{display:block}
+  .focus-inner{max-width:680px;margin:0 auto;padding:22px 18px 40px;min-height:100%;display:flex;flex-direction:column}
+  .focus-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .focus-top span{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:#D4AF37}
+  .close-focus{background:rgba(255,255,255,.10);color:#fff;border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:0 16px;font-weight:700}
+  .focus-card{margin-top:28px;text-align:center}
+  .focus-icon{width:76px;height:76px;border-radius:22px;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800}
+  .focus-card h2{font-family:"DM Serif Display",serif;font-weight:400;font-size:42px;margin:16px 0 6px;letter-spacing:-.02em}
+  .focus-card p{color:#D4AF37;margin:0 auto;max-width:440px;line-height:1.6;font-size:15px}
+  .focus-target{margin-top:10px;font-weight:700;color:#fff}
+  .timer{font-variant-numeric:tabular-nums;font-size:clamp(64px,14vw,96px);font-weight:800;letter-spacing:-.05em;line-height:1;margin:28px 0 6px}
+  .timer-label{color:#D4AF37;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:800}
+  .timer-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+  .timer-btns button{border-radius:999px;padding:0 20px;font-weight:800;font-size:14px;border:1px solid rgba(255,255,255,.18)}
+  .t-primary{background:linear-gradient(135deg,#F0D67C,#D4AF37);color:#050505;border-color:#D4AF37 !important}
+  .t-ghost{background:transparent;color:#fff}
+  .focus-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:30px}
+  .nav-btn{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:0 16px;font-weight:700}
+  .focus-dots{display:flex;gap:6px;justify-content:center}
+  .focus-dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.22);display:block}
+  .focus-dots i.active{background:#D4AF37;width:22px;border-radius:999px}
+  .focus-dots i.done{background:#D4AF37}
+  .focus-done-btn{width:100%;margin-top:16px;background:linear-gradient(135deg,#F0D67C,#D4AF37);color:#050505;border:1px solid #D4AF37;border-radius:16px;font-size:15px;font-weight:800;padding:0 16px}
+  .focus-done-btn.done{background:#161207;color:#F0D67C;border:1px solid rgba(212,175,55,.55)}
+  .toast{position:fixed;left:50%;transform:translateX(-50%) translateY(20px);bottom:18px;background:#221C0E;color:#F0D67C;border:1px solid rgba(212,175,55,.50);padding:12px 16px;border-radius:999px;font-size:13.5px;font-weight:700;opacity:0;pointer-events:none;transition:.25s;z-index:60;box-shadow:var(--shadow);max-width:calc(100vw - 32px);text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:70;display:none;align-items:flex-end;justify-content:center;padding:16px}
+  .modal-backdrop.open{display:flex}
+  @media(min-width:640px){.modal-backdrop{align-items:center}}
+  .modal{background:var(--card);color:var(--ink);border-radius:20px;padding:20px;max-width:420px;width:100%;box-shadow:var(--shadow)}
+  .modal h3{margin:0 0 6px;font-size:18px}
+  .modal p{margin:0;color:var(--muted);font-size:14px;line-height:1.55}
+  .modal-actions{display:flex;gap:8px;margin-top:16px}
+  .modal-actions button{flex:1;border-radius:999px;font-weight:800;font-size:14px;padding:0 14px}
+  .btn-danger{background:#B42318;color:#fff;border:0}
+  .btn-cancel{background:transparent;border:1px solid var(--line);color:var(--ink)}
 </style>
 </head>
 <body>
-<main class="wrap">
-  <header>
-    <div>
-      <h1>Habit Tracker</h1>
-      <p class="sub">Java, LeetCode, English, Interview &amp; SAP. Open-ended journey, no fixed end date.</p>
+<div class="wrap" id="app">
+  <div class="topbar">
+    <div class="date-pill"><b id="pillDate">Today</b><span id="pillSub">· Not started yet — Day 1 begins the day you start</span></div>
+    <div class="top-actions">
+      <button class="aura-btn" id="auraBtn" aria-pressed="false"><i></i> Aura Mode</button>
+      <button class="focus-btn" id="openFocus"><i></i> Focus Mode</button>
     </div>
-    <div class="pill" id="datePill">Loading…</div>
-  </header>
+  </div>
 
-  <div class="status" id="storageStatus">Checking where data is saved…</div>
+  <div class="hero">
+    <section class="hero-card">
+      <div class="hero-kicker">Your journey · Java Backend + SAP · Starts when you start</div>
+      <h1>Small days,<br><em>compounding</em> daily.</h1>
+      <p id="heroText">No preset Day 1 here. Nothing is counted until you start: pick your start day below, tap Start, and that day becomes your Day 1 — every day after it counts up from there. No fixed end either: go as deep as you want, Day 91, Day 120, Day 200…</p>
+      <div class="hero-meta">
+        <span class="chip"><strong id="heroDone">0 of 5</strong> &nbsp;<span id="heroDoneLabel">done today</span></span>
+        <span class="chip"><strong id="heroLeft">5</strong> &nbsp;left</span>
+        <span class="chip"><strong id="heroDay">Not started</strong> &nbsp;· no end date</span>
+        <span class="chip">🎯 &nbsp;MNC IT / Software role</span>
+      </div>
+    </section>
 
-  <section class="hero">
-    <div class="ring" aria-label="Today progress">
-      <svg width="124" height="124" viewBox="0 0 124 124">
-        <circle cx="62" cy="62" r="52" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="11"></circle>
-        <circle id="ringFill" cx="62" cy="62" r="52" fill="none" stroke="#ffffff" stroke-width="11" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"></circle>
-      </svg>
-      <div class="center"><div class="pct" id="ringPct">0%</div><div class="lbl">today done</div></div>
+    <section class="ring-card" aria-label="Today's progress">
+      <div class="ring-wrap">
+        <svg width="148" height="148" viewBox="0 0 148 148">
+          <defs>
+            <linearGradient id="auraGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#D4AF37"/>
+              <stop offset="55%" stop-color="#D4AF37"/>
+              <stop offset="100%" stop-color="#F0D67C"/>
+            </linearGradient>
+          </defs>
+          <circle cx="74" cy="74" r="62" fill="none" stroke="var(--line)" stroke-width="11"/>
+          <circle id="ringProg" cx="74" cy="74" r="62" fill="none" stroke="#D4AF37" stroke-width="11" stroke-linecap="round" stroke-dasharray="389.5" stroke-dashoffset="389.5" style="transition:stroke-dashoffset .5s ease"/>
+        </svg>
+        <div class="ring-center"><b id="ringPct">0%</b><span id="ringDayLabel">Day 1</span></div>
+      </div>
+      <h3 id="ringTitle">Ready when you are</h3>
+      <p id="ringSub">Start your journey below — the day you start becomes Day 1.</p>
+    </section>
+  </div>
+
+  <section class="start-card" id="startCard" aria-label="Choose your start day">
+    <h2>Your Day 1 starts when you start</h2>
+    <p>There is <strong>no fixed Day 1 date</strong> in this tracker. Choose the day you will actually begin — today, Monday, any day — and tap Start. <strong>That chosen day is Day 1</strong>, the next day is Day 2, and the weeks count up from there with no end date.</p>
+    <div class="start-picker" id="startPicker">
+      <div class="start-row">
+        <input type="date" id="startDateInput" aria-label="Choose your Day 1 date" />
+        <button class="start-go" id="startChosenBtn">▶ Start — this is my Day 1</button>
+        <button class="start-alt" id="startTodayBtn">Start today</button>
+        <button class="start-alt" id="startMondayBtn">Start Monday</button>
+      </div>
     </div>
-    <div style="flex:1;min-width:220px">
-      <h2 id="heroTitle">Day 1 begins Thu, 19 Nov</h2>
-      <p id="heroText">No fixed end date: go as deep as you want, the counter just keeps counting.</p>
-      <span class="badge">Open-ended &middot; From 19 Nov 2026 &middot; No end date</span>
-    </div>
+    <p class="start-status" id="startStatus">Not started yet — pick your day above when you're ready.</p>
+    <button class="start-change" id="changeStartBtn">Change my start day</button>
   </section>
 
-  <section class="weekbar">
-    <div class="row">
-      <h3 id="weekTitle">Week 1</h3>
-      <span style="flex:1"></span>
-      <button class="btn" id="prevWeekBtn" type="button">← Prev week</button>
-      <button class="btn" id="currentWeekBtn" type="button">Go to current week</button>
-      <button class="btn" id="nextWeekBtn" type="button">Next week →</button>
+  <div class="week" id="weekStrip" aria-label="This week"></div>
+
+  <div class="week-nav">
+    <div class="week-nav-label" id="weekNavLabel">Week 1 <span>· Days 1–7</span></div>
+    <div class="week-nav-btns">
+      <button class="wnav" id="prevWeekBtn">← Prev week</button>
+      <button class="wnav current" id="currentWeekBtn" style="display:none">Go to current week</button>
+      <button class="wnav" id="nextWeekBtn">Next week →</button>
     </div>
-    <div class="weekstrip" id="weekStrip"></div>
-    <p style="color:#94a3b8;font-size:13px;margin:10px 0 0">Tap a day circle under a habit to check off or backfill that day.</p>
+  </div>
+
+  <section class="todo-card" aria-label="Today's to-do list">
+    <div class="todo-head">
+      <div>
+        <h2 id="todoTitle">Today's To-Do</h2>
+        <p>Everything for today in one place — every task earns XP. Tap each task as you finish it: the 5 habits and the day's study items all tick off here, and finishing all 8 completes your day.</p>
+      </div>
+      <div class="todo-head-badges">
+        <span class="todo-xp" id="todoXp">⭐ 0 / 130 XP today</span>
+        <span class="todo-count" id="todoCount">0 of 8 done</span>
+      </div>
+    </div>
+    <div class="todo-progress"><i id="todoBar" style="width:0%"></i></div>
+    <p class="todo-progress-label" id="todoProgressLabel"><strong>Let's start</strong> — tap the first task when you're ready.</p>
+    <div class="todo-list" id="todoList"></div>
+    <p class="todo-foot" id="todoFoot"></p>
   </section>
 
   <div class="section-head">
-    <h2>Your habits</h2>
-    <button class="btn-green" id="addTopBtn" type="button">＋ Add Habit</button>
+    <div>
+      <h2 id="sectionTitle">Your habits — preview</h2>
+      <p id="sectionSub">Tap a day circle to mark that day, tap ✓ to finish the current day. Use Next week to keep going — the weeks and days never run out.</p>
+    </div>
+    <button class="add-btn" id="toggleAdd">＋ Add Habit</button>
   </div>
 
-  <div id="habitList"></div>
-  <button class="addbar" id="addBarBtn" type="button">＋ Add a new habit</button>
+  <div class="habits" id="habitList"></div>
 
-  <section class="form hidden" id="habitForm">
-    <h3 id="formTitle">Add habit</h3>
-    <label for="fName">Habit name</label>
-    <input id="fName" type="text" placeholder="e.g. Aptitude" maxlength="40">
-    <label for="fDesc">Description / target note</label>
-    <input id="fDesc" type="text" placeholder="e.g. Reasoning + puzzles" maxlength="80">
-    <label for="fTarget">Daily target</label>
-    <input id="fTarget" type="text" placeholder="e.g. 30 min" maxlength="30">
-    <label for="fColor">Colour</label>
-    <select id="fColor">
-      <option value="#22c55e">Green</option>
-      <option value="#f97316">Orange</option>
-      <option value="#eab308">Yellow</option>
-      <option value="#3b82f6">Blue</option>
-      <option value="#a855f7">Purple</option>
-      <option value="#ec4899">Pink</option>
-    </select>
-    <p style="color:#94a3b8;font-size:13px">It joins your list straight away — in the week view and in Focus Mode too. It will show every day from now on, in all future weeks.</p>
-    <div class="row">
-      <button class="btn-green" id="saveHabitBtn" type="button">Save habit</button>
-      <button class="btn-ghost" id="cancelHabitBtn" type="button">Cancel</button>
+  <button class="add-card" id="addCardBtn"><span class="plus">＋</span> Add Habit <span>— add your own habit, with your own daily target</span></button>
+
+  <div class="add-panel" id="addPanel">
+    <h3 id="formTitle">Add a habit</h3>
+    <p class="hint">It joins your list straight away — in the week view and in Focus Mode too.</p>
+    <div class="form-grid">
+      <input id="fName" type="text" placeholder="Habit name — e.g. Reading" />
+      <input id="fTarget" type="text" placeholder="Daily target — e.g. 20 minutes" />
+      <input id="fDesc" type="text" placeholder="What will you do? — e.g. Read 10 pages" style="grid-column:1/-1" />
     </div>
+    <div class="form-actions">
+      <button class="primary-btn" id="saveHabit">Save habit</button>
+      <button class="ghost-btn" id="cancelAdd">Cancel</button>
+    </div>
+  </div>
+
+  <section class="roadmap">
+    <div>
+      <h3>Why these five?</h3>
+      <p>Java + LeetCode build the skill, English + Interview win the room, and SAP S/4HANA Finance / FICO runs alongside — the mix from your roadmap to an MNC backend role. There is deliberately no end date on this: if you go deeper than 90 days, the counter simply keeps going — Day 91, Day 120, Day 200.</p>
+    </div>
+    <div class="roadmap-badge"><b id="badgeDay">Not started</b><span id="badgeSub">Day 1 = your start day · no end date</span></div>
   </section>
 
-  <footer>
-    Start: 19 Nov 2026 = Day 1. Habits repeat every day. New habits appear on all future days and weeks.<br>
-    If the backend is not configured, this page saves in your browser only.
-  </footer>
-</main>
+  <footer>Built around your plan: Java phases, topic-matched LeetCode, daily American English speaking, daily interview practice, and a daily SAP lesson.</footer>
+</div>
 
-<div class="focus hidden" id="focusOverlay" role="dialog" aria-label="Focus Mode">
-  <div class="focus-card">
-    <button class="btn-ghost small" id="exitFocusBtn" type="button" style="float:right">✕ Exit</button>
-    <div style="clear:both"></div>
-    <div style="color:#4ade80;font-weight:800;letter-spacing:1px">FOCUS MODE</div>
-    <h2 id="focusName">—</h2>
-    <p id="focusDesc">—</p>
-    <div class="timer" id="timerText">25:00</div>
-    <div>
-      <button class="btn small" data-mins="25" type="button">25 min</button>
-      <button class="btn small" data-mins="15" type="button">15 min</button>
-      <button class="btn small" data-mins="5" type="button">5 min</button>
+<!-- FOCUS MODE -->
+<div class="focus-overlay" id="focusOverlay" role="dialog" aria-modal="true" aria-label="Focus Mode">
+  <div class="focus-inner">
+    <div class="focus-top"><span>● Focus Mode — one habit at a time</span><button class="close-focus" id="closeFocus">✕ &nbsp;Exit</button></div>
+    <div class="focus-card">
+      <div class="focus-icon" id="focusIcon">Ja</div>
+      <h2 id="focusName">Java</h2>
+      <p id="focusDesc"></p>
+      <div class="focus-target" id="focusTarget"></div>
+      <div class="timer" id="timerDisplay">25:00</div>
+      <div class="timer-label">Pomodoro · 25 minutes</div>
+      <div class="timer-btns">
+        <button class="t-primary" id="timerToggle">▶ Start timer</button>
+        <button class="t-ghost" id="timerReset">Reset</button>
+        <button class="t-ghost" id="timerPreset">25 / 15 / 5 min</button>
+      </div>
+      <button class="focus-done-btn" id="focusDoneBtn">✓ Mark done &amp; continue</button>
+      <div class="focus-nav">
+        <button class="nav-btn" id="focusPrev">← Prev</button>
+        <div class="focus-dots" id="focusDots"></div>
+        <button class="nav-btn" id="focusNext">Next →</button>
+      </div>
     </div>
-    <div class="timer-btns">
-      <button class="btn-green" id="timerStartBtn" type="button">Start</button>
-      <button class="btn" id="timerResetBtn" type="button">Reset</button>
-    </div>
-    <div class="focus-nav">
-      <button class="btn" id="focusPrevBtn" type="button">← Prev</button>
-      <button class="btn-green" id="focusDoneBtn" type="button">Mark done &amp; continue →</button>
-      <button class="btn" id="focusNextBtn" type="button">Next →</button>
-    </div>
-    <div class="focus-dots" id="focusDots"></div>
-    <p id="focusDoneMsg" style="color:#4ade80;font-weight:700"></p>
   </div>
 </div>
 
+<div class="modal-backdrop" id="deleteBackdrop" role="dialog" aria-modal="true" aria-label="Delete habit">
+  <div class="modal">
+    <h3>Delete this habit?</h3>
+    <p id="deleteText">This removes it from your list for this session.</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="cancelDelete">Keep it</button>
+      <button class="btn-danger" id="confirmDeleteBtn">Yes, delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
-(function(){
-  "use strict";
-  var START = new Date(2026, 10, 19);
-  START.setHours(0,0,0,0);
-  var API_URL = "/api/data";
-  var LOCAL_KEY = "habitTrackerDataV1";
+var COLORS = [
+  {bg:'#2A2110', fg:'#F0D67C', solid:'#D4AF37'},
+  {bg:'#241C0C', fg:'#F0D67C', solid:'#B8962E'},
+  {bg:'#332914', fg:'#F5EFE0', solid:'#D4AF37'},
+  {bg:'#1A1508', fg:'#D4AF37', solid:'#F0D67C'},
+  {bg:'#2E2512', fg:'#F0D67C', solid:'#D4AF37'},
+  {bg:'#201A0E', fg:'#D4AF37', solid:'#8C7326'},
+  {bg:'#28200F', fg:'#F5EFE0', solid:'#D4AF37'}
+]
 
-  var DEFAULT_HABITS = [
-    {id:"java", name:"Java", desc:"Java core concepts, OOP, collections", target:"60 min", color:"#f97316", checks:{}},
-    {id:"leetcode", name:"LeetCode", desc:"Topic-matched problems from today's Java topic", target:"3 problems", color:"#eab308", checks:{}},
-    {id:"english", name:"English", desc:"American English speaking drill", target:"25 min", color:"#22c55e", checks:{}},
-    {id:"interview", name:"Interview", desc:"Daily HR + technical interview practice", target:"25 min", color:"#3b82f6", checks:{}},
-    {id:"sap", name:"SAP", desc:"SAP S/4HANA Finance & FICO concepts + hands-on", target:"45 min", color:"#a855f7", checks:{}}
-  ];
+/* ---- Open-ended journey calendar ----
+   There is NO preset Day 1. The journey is "not started" until the
+   user picks a start day and taps Start — THAT day becomes Day 1,
+   the next day Day 2, and so on. There is NO final day either:
+   every new week exists as soon as you tap "Next week" — Day 91,
+   120, 200… keep counting up. (Session only: a refresh resets to
+   not-started, like the check-offs on this website version.) */
+var START = null;
+var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var MONTHS_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+var DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+var DOW_FULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
-  function cloneDefaults(){
-    return JSON.parse(JSON.stringify(DEFAULT_HABITS));
+function baseTime(){ return START ? START.getTime() : nowD.getTime(); }
+function dateForDay(n){ var d = new Date(baseTime()); d.setDate(d.getDate() + (n - 1)); return d; }
+function refreshTodayDay(){
+  if(!START){ todayDay = 0; return; }
+  var diff = Math.round((nowD.getTime() - START.getTime()) / 86400000);
+  todayDay = diff >= 0 ? diff + 1 : 0;   // 0 while the chosen start day is still ahead
+}
+function fmtShort(d){ return DOW[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS[d.getMonth()]; }
+function fmtFull(d){ return DOW_FULL[d.getDay()] + ', ' + d.getDate() + ' ' + MONTHS_FULL[d.getMonth()] + ' ' + d.getFullYear(); }
+function weekOfDay(n){ return Math.floor((n - 1) / 7) + 1; }
+function weekStartDay(w){ return (w - 1) * 7 + 1; }
+
+var nowD = new Date(); nowD.setHours(0,0,0,0);
+var started = false;                // nothing counts until the user taps Start
+var todayDay = 0;                   // 0 = not started yet, or start day still ahead
+var viewWeek = 1;
+
+var habits = [
+  { id:1, name:'Java', short:'Ja', color:0, desc:'Core Java + backend study — follow today\u2019s phase topic (operators, loops, OOP, collections\u2026).', target:'90 min study', checks:{} },
+  { id:2, name:'LeetCode', short:'LC', color:1, desc:'Solve problems from today\u2019s Java topic only — Arrays day means Arrays problems, Stack day means Stack problems.', target:'2 problems', checks:{} },
+  { id:3, name:'English', short:'En', color:2, desc:'American English speaking practice — speak out loud, record yourself, fix one phrase at a time.', target:'20 min speaking', checks:{} },
+  { id:4, name:'Interview', short:'In', color:3, desc:'Interview practice like an MNC round — one HR answer + one technical answer, spoken, not just read.', target:'1 full session', checks:{} },
+  { id:5, name:'SAP', short:'SAP', color:4, desc:'SAP S/4HANA Finance & SAP FICO — today\u2019s SAP lesson from your roadmap appendix.', target:'45 min lesson', checks:{} }
+];
+var nextId = 6;
+var editingId = null;
+
+function $(id){ return document.getElementById(id); }
+function toast(msg){
+  var t=$('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2400);
+}
+function isDone(h, day){ return !!h.checks[day]; }
+function doneTodayCount(){ return habits.filter(function(h){ return isDone(h, todayDay); }).length; }
+function calcStreak(h){
+  var s = 0, d = todayDay;
+  if(!isDone(h, d)) d = d - 1;               // today not done yet — count up to yesterday
+  while(d >= 1 && isDone(h, d)){ s++; d--; }  // works across every week, no upper limit
+  return s;
+}
+function escapeHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function renderHeader(){
+  $('pillDate').textContent = fmtFull(nowD);
+  var status = $('startStatus'), card = $('startCard');
+  if(!started){
+    $('pillSub').textContent = '· Not started yet — Day 1 begins the day you start';
+    $('heroText').textContent = 'No preset Day 1 here. Nothing is counted until you start: pick your start day below, tap Start, and that day becomes your Day 1 — every day after it counts up from there. No fixed end either: go as deep as you want, Day 91, Day 120, Day 200…';
+    $('badgeSub').textContent = 'Day 1 = your start day · no end date';
+    $('heroDay').textContent = 'Not started';
+    $('heroDoneLabel').textContent = 'done today';
+    $('ringDayLabel').textContent = 'Not started';
+    $('badgeDay').textContent = 'Not started';
+    if(status) status.textContent = 'Not started yet — pick your day above when you\u2019re ready.';
+    if(card) card.classList.remove('started');
+    var tt0 = $('todoTitle'); if(tt0) tt0.textContent = "Today's To-Do — starts on your Day 1";
+    return;
   }
+  if(card) card.classList.add('started');
+  if(todayDay < 1){
+    // Start day chosen but still ahead (e.g. Monday)
+    $('pillSub').textContent = '· Day 1 begins ' + fmtShort(START) + ' · no end date';
+    $('heroText').textContent = 'Your Day 1 is ' + fmtFull(START) + ' — nothing counts before it. On that morning this tracker wakes up as Day 1, and every day after counts up from there, with no fixed end.';
+    $('badgeSub').textContent = 'Day 1 · ' + fmtShort(START) + ' · no end date';
+    $('heroDay').textContent = 'Day 1 · ' + fmtShort(START);
+    $('heroDoneLabel').textContent = 'done today';
+    $('ringDayLabel').textContent = 'Starts ' + fmtShort(START);
+    $('badgeDay').textContent = 'Day 1 soon';
+    if(status) status.textContent = '✓ Day 1 is set: ' + fmtFull(START) + '. Your journey begins that morning.';
+    var tt1 = $('todoTitle'); if(tt1) tt1.textContent = "Day 1 To-Do — " + fmtShort(START) + ' (preview)';
+    return;
+  }
+  $('pillSub').textContent = '· Day ' + todayDay + ' — Day 1 was ' + fmtShort(START) + ' · no end date';
+  $('heroText').textContent = 'You started on ' + fmtShort(START) + ', so today is your Day ' + todayDay + '. There is no fixed end: go as deep as you want, and the days simply keep counting up — Week ' + weekOfDay(todayDay) + ' now, Week ' + (weekOfDay(todayDay) + 1) + ' next, for as long as you keep going.';
+  $('badgeSub').textContent = 'Started ' + fmtShort(START) + ' · no end date';
+  $('heroDay').textContent = 'Day ' + todayDay;
+  $('heroDoneLabel').textContent = 'done on Day ' + todayDay;
+  $('ringDayLabel').textContent = 'Day ' + todayDay;
+  $('badgeDay').textContent = 'Day ' + todayDay;
+  if(status) status.textContent = '✓ Started ' + fmtFull(START) + ' — today is Day ' + todayDay + '.';
+  var tt = $('todoTitle'); if(tt) tt.textContent = "Today's To-Do — Day " + todayDay + ' · ' + fmtShort(nowD);
+}
+function requireStarted(){
+  if(todayDay >= 1) return true;
+  toast(started ? ('Your Day 1 is ' + fmtShort(START) + ' — ticking starts that day') : 'Start your journey first — pick your Day 1 in the card above');
+  var c = $('startCard'); if(c) c.scrollIntoView({ behavior:'smooth', block:'center' });
+  return false;
+}
 
-  var state = { version:1, startDate:"2026-11-19", habits: cloneDefaults(), updatedAt: null };
-  var storageMode = "browser";
-  var backendAvailable = false;
-  var viewWeek = 1;
-  var editingId = null;
-  var pendingDeleteId = null;
-  var focusIndex = 0;
-  var timerSeconds = 25*60, timerLeft = 25*60, timerRunning = false, timerId = null;
-
-  function esc(s){
-    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
-      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+function renderWeekStrip(){
+  var first = weekStartDay(viewWeek);
+  var html = '';
+  for(var i = 0; i < 7; i++){
+    var absDay = first + i;
+    var d = dateForDay(absDay);
+    var dots = '';
+    habits.forEach(function(h){
+      var c = COLORS[h.color % COLORS.length];
+      dots += '<i class="' + (isDone(h, absDay) ? 'on' : '') + '" style="' + (isDone(h, absDay) ? 'background:' + c.solid : '') + '"></i>';
     });
+    var cls = 'day' + (absDay === todayDay ? ' today' : '') + (absDay > todayDay ? ' ahead' : '');
+    html += '<div class="' + cls + '"><small>' + DOW[d.getDay()] + '</small><b>' + d.getDate() + '</b><em>Day ' + absDay + '</em><div class="dots">' + dots + '</div></div>';
   }
-  function midnight(d){ var x=new Date(d); x.setHours(0,0,0,0); return x; }
-  function dayNumberForDate(d){
-    return Math.floor((midnight(d).getTime() - START.getTime())/86400000) + 1;
-  }
-  function dateForDay(n){
-    var d = new Date(START); d.setDate(d.getDate() + (n-1)); return d;
-  }
-  function todayDay(){ return dayNumberForDate(new Date()); }
-  function currentWeek(){ var t = todayDay(); return t < 1 ? 1 : Math.ceil(t/7); }
-  function isDone(h, day){ return !!(h.checks && h.checks[String(day)]); }
-  function streakOf(h){
-    var t = todayDay();
-    if (t < 1) return 0;
-    var day = t, count = 0;
-    if (!isDone(h, day)) day = t - 1;
-    while (day >= 1 && isDone(h, day)) { count++; day--; }
-    return count;
-  }
-  function fmtDate(d){
-    return d.toLocaleDateString("en-GB", {weekday:"short", day:"numeric", month:"short"});
-  }
-  function fmtLong(d){
-    return d.toLocaleDateString("en-GB", {weekday:"long", day:"numeric", month:"long", year:"numeric"});
-  }
+  $('weekStrip').innerHTML = html;
 
-  function setStatus(){
-    var el = document.getElementById("storageStatus");
-    if (storageMode === "github") {
-      el.className = "status";
-      el.innerHTML = "<b>Saved to GitHub via backend.</b> Check-offs are stored in data.json in your repo.";
-    } else {
-      el.className = "status browser";
-      el.innerHTML = "<b>Saved in this browser only.</b> Backend not configured or unavailable — data will not sync to GitHub. See README to connect the backend.";
-    }
-  }
+  var last = first + 6;
+  $('weekNavLabel').innerHTML = 'Week ' + viewWeek + ' <span>· ' + fmtShort(dateForDay(first)) + ' – ' + fmtShort(dateForDay(last)) + ' · Days ' + first + '–' + last + '</span>';
+  $('prevWeekBtn').disabled = viewWeek <= 1;
+  var curWeek = todayDay >= 1 ? weekOfDay(todayDay) : 1;
+  $('currentWeekBtn').style.display = (viewWeek === curWeek) ? 'none' : '';
 
-  function saveLocal(){
-    try { localStorage.setItem(LOCAL_KEY, JSON.stringify(state)); } catch(e){}
+  if(!started){
+    $('sectionTitle').textContent = 'Your habits — preview (starts on your Day 1)';
+  } else if(todayDay < 1){
+    $('sectionTitle').textContent = 'Your habits — Day 1 begins ' + fmtShort(START);
+  } else if(viewWeek === curWeek){
+    $('sectionTitle').textContent = 'Day ' + todayDay + ' habits — ' + fmtShort(dateForDay(todayDay));
+  } else {
+    $('sectionTitle').textContent = 'Week ' + viewWeek + ' — ' + fmtShort(dateForDay(first)) + ' to ' + fmtShort(dateForDay(last));
   }
-  function loadLocal(){
-    try {
-      var raw = localStorage.getItem(LOCAL_KEY);
-      if (!raw) return null;
-      var parsed = JSON.parse(raw);
-      if (parsed && Array.isArray(parsed.habits)) return parsed;
-    } catch(e){}
-    return null;
-  }
+}
 
-  async function save(){
-    state.updatedAt = new Date().toISOString();
-    saveLocal();
-    if (backendAvailable) {
-      try {
-        var r = await fetch(API_URL, {
-          method:"POST",
-          headers:{"Content-Type":"application/json"},
-          body: JSON.stringify(state)
-        });
-        if (r.ok) {
-          storageMode = "github";
-          setStatus();
-          return;
-        }
-      } catch(e){}
-      storageMode = "browser";
-      setStatus();
-    } else {
-      storageMode = "browser";
-      setStatus();
+function render(){
+  renderHeader();
+  var list = $('habitList'); list.innerHTML = '';
+  var first = weekStartDay(viewWeek);
+  habits.forEach(function(h){
+    var c = COLORS[h.color % COLORS.length];
+    var done = isDone(h, todayDay);
+    var streak = calcStreak(h);
+    var card = document.createElement('article');
+    card.className = 'habit' + (done ? ' done-card' : '');
+    var dotsHtml = '<span class="week-label">Week ' + viewWeek + '</span>';
+    for(var i = 0; i < 7; i++){
+      (function(absDay){
+        var d = dateForDay(absDay);
+        var v = isDone(h, absDay);
+        dotsHtml += '<button class="wdot ' + (v ? 'done' : '') + ' ' + (absDay === todayDay ? 'is-today' : '') + '" data-habit="' + h.id + '" data-day="' + absDay + '" aria-label="Day ' + absDay + ', ' + fmtShort(d) + ', for ' + escapeHtml(h.name) + '"><span>' + DOW[d.getDay()].charAt(0) + '</span><b>' + (v ? '✓' : d.getDate()) + '</b></button>';
+      })(first + i);
     }
-  }
-
-  async function load(){
-    try {
-      var r = await fetch(API_URL, {method:"GET", headers:{"Accept":"application/json"}});
-      if (r.ok) {
-        var data = await r.json();
-        if (data && Array.isArray(data.habits)) {
-          backendAvailable = true;
-          storageMode = "github";
-          if (data.habits.length > 0) {
-            state = data;
-            state.habits.forEach(function(h){ if(!h.checks) h.checks={}; });
-          } else {
-            state = {version:1, startDate:"2026-11-19", habits: cloneDefaults(), updatedAt:null};
-          }
-          setStatus();
-          return;
-        }
-      }
-    } catch(e){}
-    backendAvailable = false;
-    storageMode = "browser";
-    var local = loadLocal();
-    if (local) {
-      state = local;
-      state.habits.forEach(function(h){ if(!h.checks) h.checks={}; });
-    }
-    setStatus();
-  }
-
-  function render(){
-    var t = todayDay();
-    var now = new Date();
-    var pill = document.getElementById("datePill");
-    var heroTitle = document.getElementById("heroTitle");
-    var heroText = document.getElementById("heroText");
-    if (t < 1) {
-      pill.textContent = fmtDate(now) + " · Day 1 — starts tomorrow";
-      heroTitle.textContent = "Day 1 begins Thu, 19 Nov — tomorrow";
-      heroText.textContent = "No fixed end date: go as deep as you want, the counter just keeps counting.";
-    } else {
-      pill.textContent = fmtDate(now) + " · Day " + t;
-      heroTitle.textContent = "Day " + t + " · no end date";
-      heroText.textContent = "Started " + fmtLong(START) + ". Keep going — Day 91, 120, 200, as far as you need.";
-    }
-    var done = 0;
-    if (t >= 1) {
-      state.habits.forEach(function(h){ if (isDone(h, t)) done++; });
-    }
-    var total = state.habits.length || 1;
-    var pct = Math.round(done/total*100);
-    document.getElementById("ringPct").textContent = pct + "%";
-    document.getElementById("ringFill").style.strokeDashoffset = String(326.7 * (1 - pct/100));
-    renderWeekStrip(t);
-    renderHabits(t);
-    if (!document.getElementById("focusOverlay").classList.contains("hidden")) renderFocus();
-  }
-
-  function renderWeekStrip(t){
-    var startDay = (viewWeek-1)*7 + 1;
-    document.getElementById("weekTitle").textContent =
-      "Week " + viewWeek + " · Days " + startDay + "–" + (startDay+6);
-    document.getElementById("prevWeekBtn").disabled = viewWeek <= 1;
-    var strip = document.getElementById("weekStrip");
-    var html = "";
-    for (var i=0;i<7;i++){
-      var day = startDay + i;
-      var d = dateForDay(day);
-      var cls = "day" + (day===t ? " today" : "") + (day>t ? " future" : "");
-      html += '<div class="'+cls+'"><div class="dow">'+d.toLocaleDateString("en-GB",{weekday:"short"})+'</div>' +
-        '<div class="num">'+d.getDate()+'</div><div class="dn">Day '+day+'</div></div>';
-    }
-    strip.innerHTML = html;
-  }
-
-  function renderHabits(t){
-    var list = document.getElementById("habitList");
-    var startDay = (viewWeek-1)*7 + 1;
-    if (state.habits.length === 0) {
-      list.innerHTML = '<p style="color:#94a3b8">No habits yet. Use Add Habit to create one.</p>';
-      return;
-    }
-    var html = "";
-    state.habits.forEach(function(h, idx){
-      var st = streakOf(h);
-      var todayDone = t >= 1 && isDone(h, t);
-      html += '<article class="habit"><div class="habit-top">' +
-        '<span class="dot" style="background:'+esc(h.color||"#22c55e")+'"></span>' +
-        '<div style="min-width:0;flex:1"><h3>'+esc(h.name)+'</h3>' +
-        '<p class="desc">'+esc(h.desc||"")+'</p>' +
-        '<div class="meta">Target: '+esc(h.target||"—")+' &nbsp;·&nbsp; <span class="streak">🔥 '+st+'</span> day streak</div></div>' +
-        '<div class="actions">' +
-          '<button class="btn small" type="button" data-focus="'+idx+'">Focus</button>' +
-          '<button class="btn small" type="button" data-edit="'+esc(h.id)+'">Edit</button>' +
-          '<button class="btn small" type="button" data-del="'+esc(h.id)+'">'+(pendingDeleteId===h.id ? "Tap again to delete" : "Delete")+'</button>' +
-        '</div></div>';
-      html += '<div class="dots">';
-      for (var i=0;i<7;i++){
-        var day = startDay + i;
-        var d = dateForDay(day);
-        var cls = "wdot" + (isDone(h, day) ? " done" : "") + (day===t ? " today" : "");
-        var label = isDone(h, day) ? "✓" : String(d.getDate());
-        html += '<button class="'+cls+'" type="button" data-toggle="'+esc(h.id)+':'+day+'" aria-label="'+esc(h.name)+' Day '+day+'">'+label+'</button>';
-      }
-      html += '</div>';
-      html += '<div class="markrow"><button class="'+(todayDone ? "btn" : "btn-green")+'" type="button" data-mark="'+esc(h.id)+'">' +
-        (todayDone ? "✓ Done today — tap to undo" : "✓ Mark done for today") + '</button></div>';
-      html += '</article>';
-    });
-    list.innerHTML = html;
-  }
-
-  function openFocus(idx){
-    focusIndex = Math.max(0, Math.min(idx, state.habits.length-1));
-    document.getElementById("focusOverlay").classList.remove("hidden");
-    resetTimer();
-    renderFocus();
-  }
-  function closeFocus(){
-    stopTimer();
-    document.getElementById("focusOverlay").classList.add("hidden");
-  }
-  function renderFocus(){
-    if (state.habits.length === 0) return;
-    var h = state.habits[focusIndex];
-    document.getElementById("focusName").textContent = h.name;
-    document.getElementById("focusDesc").textContent = (h.desc||"") + (h.target ? " · Target: "+h.target : "");
-    var t = todayDay();
-    document.getElementById("focusDoneMsg").textContent =
-      (t>=1 && isDone(h,t)) ? "✓ Done today" : "";
-    var dots = document.getElementById("focusDots");
-    var html = "";
-    state.habits.forEach(function(x, i){
-      var cls = "fdot" + (i===focusIndex ? " active" : "") + ((t>=1 && isDone(x,t)) ? " done" : "");
-      html += '<button class="'+cls+'" type="button" data-fdot="'+i+'" aria-label="Focus '+esc(x.name)+'"></button>';
-    });
-    dots.innerHTML = html;
-    updateTimerText();
-  }
-  function updateTimerText(){
-    var m = Math.floor(timerLeft/60), s = timerLeft%60;
-    document.getElementById("timerText").textContent =
-      (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
-  }
-  function stopTimer(){
-    timerRunning = false;
-    if (timerId) clearInterval(timerId);
-    timerId = null;
-    document.getElementById("timerStartBtn").textContent = "Start";
-  }
-  function resetTimer(){
-    stopTimer();
-    timerLeft = timerSeconds;
-    updateTimerText();
-  }
-  function startPauseTimer(){
-    if (timerRunning) { stopTimer(); return; }
-    timerRunning = true;
-    document.getElementById("timerStartBtn").textContent = "Pause";
-    timerId = setInterval(function(){
-      if (timerLeft > 0) { timerLeft--; updateTimerText(); }
-      if (timerLeft <= 0) { stopTimer(); }
-    }, 1000);
-  }
-  function focusDoneAndNext(){
-    var t = todayDay();
-    if (t < 1) return;
-    var h = state.habits[focusIndex];
-    if (!h.checks) h.checks = {};
-    h.checks[String(t)] = true;
-    save();
-    for (var step=1; step<=state.habits.length; step++){
-      var ni = (focusIndex+step) % state.habits.length;
-      if (!isDone(state.habits[ni], t)) { focusIndex = ni; render(); return; }
-    }
-    render();
-  }
-
-  function showForm(editId){
-    editingId = editId || null;
-    pendingDeleteId = null;
-    var form = document.getElementById("habitForm");
-    form.classList.remove("hidden");
-    if (editingId) {
-      var h = state.habits.find(function(x){ return x.id===editingId; });
-      document.getElementById("formTitle").textContent = "Edit habit";
-      document.getElementById("fName").value = h ? h.name : "";
-      document.getElementById("fDesc").value = h ? (h.desc||"") : "";
-      document.getElementById("fTarget").value = h ? (h.target||"") : "";
-      document.getElementById("fColor").value = h ? (h.color||"#22c55e") : "#22c55e";
-    } else {
-      document.getElementById("formTitle").textContent = "Add habit";
-      document.getElementById("fName").value = "";
-      document.getElementById("fDesc").value = "";
-      document.getElementById("fTarget").value = "";
-      document.getElementById("fColor").value = "#22c55e";
-    }
-    form.scrollIntoView({behavior:"smooth", block:"center"});
-    document.getElementById("fName").focus();
-  }
-  function hideForm(){
-    editingId = null;
-    document.getElementById("habitForm").classList.add("hidden");
-  }
-  function saveForm(){
-    var name = document.getElementById("fName").value.trim();
-    if (!name) { alert("Please enter a habit name."); return; }
-    var desc = document.getElementById("fDesc").value.trim();
-    var target = document.getElementById("fTarget").value.trim();
-    var color = document.getElementById("fColor").value;
-    var isEdit = !!editingId;
-    if (editingId) {
-      var h = state.habits.find(function(x){ return x.id===editingId; });
-      if (h) { h.name=name; h.desc=desc; h.target=target; h.color=color; }
-    } else {
-      state.habits.push({id:"h"+Date.now(), name:name, desc:desc, target:target, color:color, checks:{}});
-    }
-    hideForm();
-    save();
-    render();
-    alert((isEdit ? "Saved: " : "Added: ") + name + " — it will show every day from now on, in all future weeks.");
-  }
-
-  document.getElementById("habitList").addEventListener("click", function(e){
-    var btn = e.target.closest("button");
-    if (!btn) return;
-    if (btn.dataset.toggle) {
-      var parts = btn.dataset.toggle.split(":");
-      var h = state.habits.find(function(x){ return x.id===parts[0]; });
-      if (!h) return;
-      if (!h.checks) h.checks={};
-      var key = parts[1];
-      if (h.checks[key]) delete h.checks[key]; else h.checks[key]=true;
-      save(); render(); return;
-    }
-    if (btn.dataset.mark) {
-      var t = todayDay();
-      if (t < 1) { alert("Day 1 starts on Thu, 19 Nov 2026."); return; }
-      var h2 = state.habits.find(function(x){ return x.id===btn.dataset.mark; });
-      if (!h2) return;
-      if (!h2.checks) h2.checks={};
-      var k = String(t);
-      if (h2.checks[k]) delete h2.checks[k]; else h2.checks[k]=true;
-      save(); render(); return;
-    }
-    if (btn.dataset.focus !== undefined && btn.dataset.focus !== "") {
-      openFocus(parseInt(btn.dataset.focus,10)); return;
-    }
-    if (btn.dataset.edit) { showForm(btn.dataset.edit); return; }
-    if (btn.dataset.del) {
-      if (pendingDeleteId !== btn.dataset.del) {
-        pendingDeleteId = btn.dataset.del;
-        render();
-        setTimeout(function(){ pendingDeleteId=null; render(); }, 3000);
-      } else {
-        state.habits = state.habits.filter(function(x){ return x.id!==btn.dataset.del; });
-        pendingDeleteId = null;
-        save(); render();
-      }
-      return;
-    }
+    var checkLabel = todayDay < 1 ? '▶ Start first — then tick' : (done ? ('✓ Done — Day ' + todayDay) : ('✓ Mark done · Day ' + todayDay));
+    card.innerHTML =
+      '<div class="avatar" style="background:' + c.bg + ';color:' + c.fg + '">' + escapeHtml(h.short) + '</div>' +
+      '<div class="habit-main">' +
+        '<div class="habit-top"><h3>' + escapeHtml(h.name) + '</h3>' + (streak > 0 ? '<span class="streak">🔥 ' + streak + ' day' + (streak === 1 ? '' : 's') + '</span>' : '<span class="streak none">' + (todayDay >= 1 ? ('No streak yet — start on Day ' + todayDay) : 'No streak yet — begins on your Day 1') + '</span>') + '</div>' +
+        '<p>' + escapeHtml(h.desc) + '</p>' +
+        '<div class="target">Daily target: <span>' + escapeHtml(h.target) + '</span></div>' +
+        '<div class="week-dots">' + dotsHtml + '</div>' +
+      '</div>' +
+      '<div class="habit-actions">' +
+        '<button class="check-btn ' + (done ? 'done' : '') + '" data-check="' + h.id + '">' + checkLabel + '</button>' +
+        '<div class="mini-row"><button class="mini-btn" data-focus="' + h.id + '">Focus</button><button class="mini-btn" data-edit="' + h.id + '">Edit</button><button class="mini-btn" data-del="' + h.id + '">Delete</button></div>' +
+      '</div>';
+    list.appendChild(card);
   });
+  // ring + hero
+  var total = habits.length || 1, done = doneTodayCount();
+  var pct = Math.round(done / total * 100);
+  var circ = 389.5;
+  $('ringProg').style.strokeDashoffset = String(circ - (circ * pct / 100));
+  $('ringPct').textContent = pct + '%';
+  $('heroDone').textContent = done + ' of ' + total;
+  $('heroLeft').textContent = String(total - done);
+  if(todayDay < 1){ $('ringPct').textContent = '—'; $('ringTitle').textContent = started ? ('Day 1 begins ' + fmtShort(START)) : 'Not started yet'; $('ringSub').textContent = started ? 'This ring wakes up on your Day 1 morning.' : 'Start your journey in the card below — the day you start becomes Day 1, and this ring tracks it.'; }
+  else if(pct === 100){ $('ringTitle').textContent = 'All ' + total + ' done 🎉'; $('ringSub').textContent = 'Perfect — every habit for Day ' + todayDay + ' is complete.'; }
+  else if(done > 0){ $('ringTitle').textContent = 'Nice — keep going'; $('ringSub').textContent = (total - done) + ' habit' + (total - done === 1 ? '' : 's') + ' left to close out Day ' + todayDay + '.'; }
+  else { $('ringTitle').textContent = 'Ready when you are'; $('ringSub').textContent = 'Tap ✓ Done on any habit — or tick it in Today\u2019s To-Do above — to start your Day ' + todayDay + ' streak.'; }
+  renderWeekStrip();
+  renderTodos();
+  bindCardButtons();
+}
 
-  document.getElementById("prevWeekBtn").addEventListener("click", function(){
-    if (viewWeek > 1) { viewWeek--; render(); }
+/* ---- Today's To-Do: the 5 habits + the day's study items, in one checklist ---- */
+var extraTodos = [
+  { id:'bite', label:'Extra Tech Bite', detail:'One small, interesting tech item for today — keep it light, just 10 minutes.', time:'10 min', done:false },
+  { id:'revise', label:'Revise & write notes', detail:'Write 3 short lines: what you learned today in Java, LeetCode and SAP.', time:'5 min', done:false },
+  { id:'plan', label:'Plan tomorrow', detail:'Glance at tomorrow\u2019s topic so the next day starts ready, not blank.', time:'5 min', done:false }
+];
+function renderTodos(){
+  var list = $('todoList'); if(!list) return;
+  var html = '<div class="todo-group">Your 5 habits · +20 XP each</div>';
+  habits.forEach(function(h){
+    var done = todayDay >= 1 && isDone(h, todayDay);
+    var c = COLORS[h.color % COLORS.length];
+    html += '<button class="todo-item' + (done ? ' done' : '') + '" data-todo-habit="' + h.id + '"><span class="todo-check" style="border-color:' + c.solid + '">✓</span><span><span class="todo-label">' + escapeHtml(h.name) + '</span><span class="todo-detail">' + escapeHtml(h.desc) + '</span><span class="todo-xp-chip">+20 XP when done</span></span><span class="todo-time">' + escapeHtml(h.target) + '</span></button>';
   });
-  document.getElementById("nextWeekBtn").addEventListener("click", function(){
-    viewWeek++; render();
+  html += '<div class="todo-group">Today\u2019s study items · +10 XP each</div>';
+  extraTodos.forEach(function(t){
+    html += '<button class="todo-item' + (t.done ? ' done' : '') + '" data-todo-extra="' + t.id + '"><span class="todo-check">✓</span><span><span class="todo-label">' + escapeHtml(t.label) + '</span><span class="todo-detail">' + escapeHtml(t.detail) + '</span><span class="todo-xp-chip">+10 XP when done</span></span><span class="todo-time">' + escapeHtml(t.time) + '</span></button>';
   });
-  document.getElementById("currentWeekBtn").addEventListener("click", function(){
-    viewWeek = currentWeek(); render();
-  });
-  document.getElementById("addTopBtn").addEventListener("click", function(){ showForm(null); });
-  document.getElementById("addBarBtn").addEventListener("click", function(){ showForm(null); });
-  document.getElementById("saveHabitBtn").addEventListener("click", saveForm);
-  document.getElementById("cancelHabitBtn").addEventListener("click", hideForm);
-
-  document.getElementById("exitFocusBtn").addEventListener("click", closeFocus);
-  document.getElementById("focusPrevBtn").addEventListener("click", function(){
-    focusIndex = (focusIndex - 1 + state.habits.length) % state.habits.length;
-    resetTimer(); renderFocus();
-  });
-  document.getElementById("focusNextBtn").addEventListener("click", function(){
-    focusIndex = (focusIndex + 1) % state.habits.length;
-    resetTimer(); renderFocus();
-  });
-  document.getElementById("focusDoneBtn").addEventListener("click", focusDoneAndNext);
-  document.getElementById("timerStartBtn").addEventListener("click", startPauseTimer);
-  document.getElementById("timerResetBtn").addEventListener("click", resetTimer);
-  document.querySelectorAll("[data-mins]").forEach(function(b){
-    b.addEventListener("click", function(){
-      timerSeconds = parseInt(b.dataset.mins,10)*60;
-      resetTimer();
+  list.innerHTML = html;
+  var total = habits.length + extraTodos.length;
+  var doneCount = (todayDay >= 1 ? doneTodayCount() : 0) + extraTodos.filter(function(t){ return t.done; }).length;
+  var pct = total ? Math.round(doneCount / total * 100) : 0;
+  var xp = (todayDay >= 1 ? doneTodayCount() * 20 : 0) + extraTodos.filter(function(t){ return t.done; }).length * 10;
+  var xpTotal = habits.length * 20 + extraTodos.length * 10;
+  $('todoCount').textContent = doneCount + ' of ' + total + ' done';
+  var xpEl = $('todoXp'); if(xpEl) xpEl.textContent = '⭐ ' + xp + ' / ' + xpTotal + ' XP today';
+  $('todoBar').style.width = pct + '%';
+  var card = document.querySelector('.todo-card'); if(card) card.classList.toggle('all-done', doneCount === total && total > 0 && todayDay >= 1);
+  if(todayDay < 1){ $('todoProgressLabel').innerHTML = started ? ('<strong>Day 1 is ' + fmtShort(START) + '</strong> — this is your Day 1 list, ready and waiting for that morning.') : '<strong>Not started yet</strong> — pick your Day 1 in the card above; this list becomes live that day.'; $('todoFoot').textContent = ''; }
+  else if(doneCount === total && total > 0){ $('todoProgressLabel').innerHTML = '<strong>🏆 All done — Day ' + todayDay + ' complete!</strong> Full ' + xpTotal + ' XP earned. Every task for today is ticked off.'; $('todoFoot').textContent = 'Day complete. Rest well — tomorrow is Day ' + (todayDay + 1) + '.'; }
+  else if(pct >= 75){ $('todoProgressLabel').innerHTML = '<strong>' + pct + '% done — almost there 🔥</strong> Just ' + (total - doneCount) + ' task' + (total - doneCount === 1 ? '' : 's') + ' left. Finish strong!'; $('todoFoot').textContent = ''; }
+  else if(pct >= 50){ $('todoProgressLabel').innerHTML = '<strong>' + pct + '% done — halfway there 💪</strong> Momentum is on your side, keep going.'; $('todoFoot').textContent = ''; }
+  else if(doneCount > 0){ $('todoProgressLabel').innerHTML = '<strong>' + pct + '% done</strong> — ' + (total - doneCount) + ' task' + (total - doneCount === 1 ? '' : 's') + ' left for today. One task at a time.'; $('todoFoot').textContent = ''; }
+  else { $('todoProgressLabel').innerHTML = '<strong>Let\u2019s start</strong> — tap the first task when you\u2019re ready and earn your first XP.'; $('todoFoot').textContent = ''; }
+  list.querySelectorAll('[data-todo-habit]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      if(!requireStarted()) return;
+      var h = habits.find(function(x){ return x.id === +btn.getAttribute('data-todo-habit'); });
+      if(!h) return;
+      if(isDone(h, todayDay)){ delete h.checks[todayDay]; toast(h.name + ' unchecked for Day ' + todayDay); }
+      else { h.checks[todayDay] = true; toast('✓ ' + h.name + ' done — Day ' + todayDay + ' counted!'); }
+      render(); renderFocusDots();
     });
   });
-  document.getElementById("focusDots").addEventListener("click", function(e){
-    var btn = e.target.closest("button[data-fdot]");
-    if (!btn) return;
-    focusIndex = parseInt(btn.dataset.fdot,10);
-    resetTimer(); renderFocus();
+  list.querySelectorAll('[data-todo-extra]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      if(!requireStarted()) return;
+      var t = extraTodos.find(function(x){ return x.id === btn.getAttribute('data-todo-extra'); });
+      if(!t) return;
+      t.done = !t.done;
+      toast(t.done ? ('✓ ' + t.label + ' done') : (t.label + ' unchecked'));
+      renderTodos();
+    });
   });
-  document.addEventListener("keydown", function(e){
-    if (e.key === "Escape" && !document.getElementById("focusOverlay").classList.contains("hidden")) closeFocus();
-  });
+}
 
-  viewWeek = currentWeek();
-  load().then(function(){ viewWeek = currentWeek(); render(); });
+function bindCardButtons(){
+  document.querySelectorAll('[data-check]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      if(!requireStarted()) return;
+      var id = +btn.getAttribute('data-check');
+      var h = habits.find(function(x){ return x.id === id; });
+      if(isDone(h, todayDay)){ delete h.checks[todayDay]; toast(h.name + ' unchecked for Day ' + todayDay); }
+      else { h.checks[todayDay] = true; toast('✓ ' + h.name + ' done — Day ' + todayDay + ' counted!'); }
+      render(); renderFocusDots();
+    });
+  });
+  document.querySelectorAll('.wdot').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      if(!requireStarted()) return;
+      var id = +btn.getAttribute('data-habit'), day = +btn.getAttribute('data-day');
+      var h = habits.find(function(x){ return x.id === id; });
+      if(isDone(h, day)){ delete h.checks[day]; toast(h.name + ' · Day ' + day + ' cleared'); }
+      else { h.checks[day] = true; toast(h.name + ' · Day ' + day + ' (' + fmtShort(dateForDay(day)) + ') marked done'); }
+      render(); renderFocusDots();
+    });
+  });
+  document.querySelectorAll('[data-focus]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var id = +btn.getAttribute('data-focus');
+      var idx = habits.findIndex(function(x){ return x.id === id; });
+      openFocus(idx);
+    });
+  });
+  document.querySelectorAll('[data-edit]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var id = +btn.getAttribute('data-edit');
+      var h = habits.find(function(x){ return x.id === id; });
+      editingId = id;
+      $('formTitle').textContent = 'Edit habit';
+      $('fName').value = h.name; $('fTarget').value = h.target; $('fDesc').value = h.desc;
+      $('addPanel').classList.add('open');
+      $('addPanel').scrollIntoView({ behavior:'smooth', block:'center' });
+    });
+  });
+  document.querySelectorAll('[data-del]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var id = +btn.getAttribute('data-del');
+      var h = habits.find(function(x){ return x.id === id; });
+      pendingDeleteId = id;
+      $('deleteText').textContent = '\u201C' + h.name + '\u201D will be removed from your list for this session.';
+      $('deleteBackdrop').classList.add('open');
+    });
+  });
+}
+var pendingDeleteId = null;
+$('cancelDelete').addEventListener('click', function(){ pendingDeleteId = null; $('deleteBackdrop').classList.remove('open'); });
+$('deleteBackdrop').addEventListener('click', function(e){ if(e.target === this){ pendingDeleteId = null; this.classList.remove('open'); } });
+$('confirmDeleteBtn').addEventListener('click', function(){
+  if(pendingDeleteId === null) return;
+  var h = habits.find(function(x){ return x.id === pendingDeleteId; });
+  habits = habits.filter(function(x){ return x.id !== pendingDeleteId; });
+  pendingDeleteId = null; $('deleteBackdrop').classList.remove('open');
+  toast((h ? h.name : 'Habit') + ' removed');
+  render(); renderFocusDots();
+});
+
+/* Week navigation — forward is unlimited, so the days never run out */
+$('prevWeekBtn').addEventListener('click', function(){ if(viewWeek > 1){ viewWeek--; render(); } });
+$('nextWeekBtn').addEventListener('click', function(){ viewWeek++; render(); toast('Week ' + viewWeek + ' — Days ' + weekStartDay(viewWeek) + '–' + (weekStartDay(viewWeek) + 6) + '. No end date, keep going.'); });
+$('currentWeekBtn').addEventListener('click', function(){ viewWeek = todayDay >= 1 ? weekOfDay(todayDay) : 1; render(); });
+
+/* Add Habit */
+function openAddForm(){
+  editingId = null; $('formTitle').textContent = 'Add a habit';
+  $('fName').value = ''; $('fTarget').value = ''; $('fDesc').value = '';
+  $('addPanel').classList.add('open');
+  $('addPanel').scrollIntoView({ behavior:'smooth', block:'center' });
+  setTimeout(function(){ $('fName').focus(); }, 350);
+}
+$('toggleAdd').addEventListener('click', function(){
+  if($('addPanel').classList.contains('open') && !editingId){ $('addPanel').classList.remove('open'); }
+  else openAddForm();
+});
+$('addCardBtn').addEventListener('click', openAddForm);
+$('cancelAdd').addEventListener('click', function(){ $('addPanel').classList.remove('open'); editingId = null; });
+$('saveHabit').addEventListener('click', function(){
+  var name = $('fName').value.trim();
+  if(!name){ toast('Give your habit a name first'); $('fName').focus(); return; }
+  var target = $('fTarget').value.trim() || 'Daily';
+  var desc = $('fDesc').value.trim() || 'Your daily habit.';
+  if(editingId){
+    var h = habits.find(function(x){ return x.id === editingId; });
+    h.name = name; h.target = target; h.desc = desc; h.short = name.slice(0, 2);
+    toast('Habit updated');
+  } else {
+    habits.push({ id: nextId, name: name, short: name.slice(0, 2), color: (nextId - 1) % COLORS.length, desc: desc, target: target, checks: {} });
+    nextId++;
+    toast('✓ Added: ' + name + ' — it\u2019s in your list now');
+  }
+  editingId = null; $('addPanel').classList.remove('open');
+  render(); renderFocusDots();
+});
+
+/* FOCUS MODE */
+var focusIdx = 0, timerSec = 25 * 60, timerTotal = 25 * 60, timerId = null, timerRunning = false, presetIdx = 0;
+var PRESETS = [25 * 60, 15 * 60, 5 * 60];
+function fmt(s){ var m = Math.floor(s / 60), sec = s % 60; return (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec; }
+function openFocus(idx){
+  if(!requireStarted()) return;
+  if(!habits.length){ toast('Add a habit first, then Focus Mode has something to show'); return; }
+  focusIdx = Math.max(0, Math.min(idx || 0, habits.length - 1));
+  $('focusOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  stopTimer(); timerSec = timerTotal = PRESETS[0]; presetIdx = 0; updateTimerUI(); renderFocus();
+}
+function closeFocusFn(){
+  $('focusOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  stopTimer();
+}
+function renderFocus(){
+  if(!habits.length){ closeFocusFn(); return; }
+  var h = habits[focusIdx]; var c = COLORS[h.color % COLORS.length];
+  $('focusIcon').textContent = h.short;
+  $('focusIcon').style.background = c.bg; $('focusIcon').style.color = c.fg;
+  $('focusName').textContent = h.name;
+  $('focusDesc').textContent = h.desc;
+  $('focusTarget').textContent = 'Daily target: ' + h.target;
+  var done = isDone(h, todayDay);
+  var btn = $('focusDoneBtn');
+  btn.textContent = done ? ('✓ Done for Day ' + todayDay + ' — tap to undo') : ('✓ Mark Day ' + todayDay + ' done & continue');
+  btn.className = 'focus-done-btn' + (done ? ' done' : '');
+  renderFocusDots();
+}
+function renderFocusDots(){
+  var html = '';
+  habits.forEach(function(h, i){
+    html += '<i class="' + (i === focusIdx ? 'active' : '') + ' ' + (isDone(h, todayDay) ? 'done' : '') + '"></i>';
+  });
+  var el = $('focusDots'); if(el) el.innerHTML = html;
+}
+function updateTimerUI(){
+  $('timerDisplay').textContent = fmt(timerSec);
+  $('timerToggle').textContent = timerRunning ? '⏸ Pause timer' : '▶ Start timer';
+}
+function stopTimer(){ timerRunning = false; if(timerId){ clearInterval(timerId); timerId = null; } updateTimerUI(); }
+$('timerToggle').addEventListener('click', function(){
+  if(timerRunning){ stopTimer(); return; }
+  timerRunning = true; updateTimerUI();
+  timerId = setInterval(function(){
+    timerSec--;
+    if(timerSec <= 0){ timerSec = 0; stopTimer(); toast('⏰ Time\u2019s up — great focus session!'); }
+    updateTimerUI();
+  }, 1000);
+});
+$('timerReset').addEventListener('click', function(){ stopTimer(); timerSec = timerTotal; updateTimerUI(); });
+$('timerPreset').addEventListener('click', function(){
+  presetIdx = (presetIdx + 1) % PRESETS.length; timerTotal = PRESETS[presetIdx]; stopTimer(); timerSec = timerTotal; updateTimerUI();
+  toast('Timer set to ' + (timerTotal / 60) + ' minutes');
+});
+$('openFocus').addEventListener('click', function(){ openFocus(0); });
+$('closeFocus').addEventListener('click', closeFocusFn);
+$('focusPrev').addEventListener('click', function(){ focusIdx = (focusIdx - 1 + habits.length) % habits.length; stopTimer(); timerSec = timerTotal; updateTimerUI(); renderFocus(); });
+$('focusNext').addEventListener('click', function(){ focusIdx = (focusIdx + 1) % habits.length; stopTimer(); timerSec = timerTotal; updateTimerUI(); renderFocus(); });
+$('focusDoneBtn').addEventListener('click', function(){
+  var h = habits[focusIdx]; var wasDone = isDone(h, todayDay);
+  if(wasDone){ delete h.checks[todayDay]; } else { h.checks[todayDay] = true; }
   render();
+  if(!wasDone){
+    toast('✓ ' + h.name + ' done — Day ' + todayDay + '!');
+    if(focusIdx < habits.length - 1){ focusIdx++; stopTimer(); timerSec = timerTotal; updateTimerUI(); }
+  }
+  renderFocus();
+});
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && $('focusOverlay').classList.contains('open')) closeFocusFn(); });
+
+/* ---- Aura Mode toggle: calm glowing aesthetic, session only ---- */
+$('auraBtn').addEventListener('click', function(){
+  var on = document.body.classList.toggle('aura-on');
+  this.setAttribute('aria-pressed', on ? 'true' : 'false');
+  this.innerHTML = on ? '<i></i> Aura Mode · On' : '<i></i> Aura Mode';
+  toast(on ? '✨ Aura Mode on — violet & gold glow' : 'Aura Mode off');
+});
+
+/* ---- Start your journey: the chosen day becomes Day 1 ---- */
+function toISODate(d){ var m = d.getMonth() + 1, day = d.getDate(); return d.getFullYear() + '-' + (m < 10 ? '0' : '') + m + '-' + (day < 10 ? '0' : '') + day; }
+function startJourney(d){
+  if(!d || isNaN(d.getTime())){ toast('Pick a start date first'); return; }
+  START = new Date(d.getTime()); START.setHours(0,0,0,0);
+  started = true;
+  refreshTodayDay();
+  viewWeek = todayDay >= 1 ? weekOfDay(todayDay) : 1;
+  render();
+  if(todayDay >= 1) toast('▶ Journey started — ' + fmtShort(START) + ' is your Day 1. Today is Day ' + todayDay + '!');
+  else toast('✓ Day 1 set for ' + fmtFull(START) + ' — see you that morning!');
+}
+(function initStart(){
+  var input = $('startDateInput');
+  if(input) input.value = toISODate(nowD);
+  $('startTodayBtn').addEventListener('click', function(){ if(input) input.value = toISODate(nowD); startJourney(new Date(nowD.getTime())); });
+  $('startMondayBtn').addEventListener('click', function(){
+    var d = new Date(nowD.getTime());
+    var add = (8 - d.getDay()) % 7; if(add === 0) add = 7;   // next Monday (today is never Monday-counted twice)
+    d.setDate(d.getDate() + add);
+    if(input) input.value = toISODate(d);
+    startJourney(d);
+  });
+  $('startChosenBtn').addEventListener('click', function(){
+    if(!input || !input.value){ toast('Pick a start date first'); return; }
+    var p = input.value.split('-');
+    startJourney(new Date(+p[0], +p[1] - 1, +p[2]));
+  });
+  $('changeStartBtn').addEventListener('click', function(){
+    started = false; START = null; todayDay = 0; viewWeek = 1;
+    render();
+    $('startCard').scrollIntoView({ behavior:'smooth', block:'center' });
+    toast('Pick a new start day — that day becomes your new Day 1');
+  });
 })();
+
+render();
 </script>
 </body>
 </html>
